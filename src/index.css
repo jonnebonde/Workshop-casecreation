@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Keep form fields white; use borders for status */
+@layer base {
+  input,
+  textarea,
+  select {
+    background-color: #ffffff !important;
+  }
+}
