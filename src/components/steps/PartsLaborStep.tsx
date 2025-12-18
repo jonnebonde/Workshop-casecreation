@@ -410,7 +410,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
   };
 
   const handleCalibrationDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.fileskr.[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     // Skip processing if in developer mode with active scenario
