@@ -56,15 +56,15 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
     make: 'BMW',
     model: 'X3',
     year: 2021,
-    color: 'Black',
+    color: 'Svart',
     vin: '1HGCM82633A123456'
   };
 
   const mockOwnerData: Owner = {
-    name: 'John Smith',
-    address: '123 Main Street, London, SW1A 1AA',
-    phone: '+44 20 7946 0958',
-    email: 'john.smith@email.com'
+    name: 'Ola Nordmann',
+    address: 'Storgata 1, Oslo, 0155',
+    phone: '+47 400 00 000',
+    email: 'ola.nordmann@example.no'
   };
 
   const mockExistingCaseData: ExistingCase = {
@@ -72,15 +72,15 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
     vrn: 'DEV123',
     status: 'open',
     createdDate: '2024-01-15',
-    description: 'Windscreen replacement - rear window'
+    description: 'Bytte av frontrute - bakrute'
   };
 
   const mockCoverageData: CoverageCheck = {
     covered: true,
     coverageAmount: 500,
     deductible: 250,
-    message: 'Full glass coverage confirmed',
-    insuranceCompany: 'Aviva Insurance'
+    message: 'Full glasdekning bekreftet',
+    insuranceCompany: 'Gjensidige'
   };
 
   const mockPriceEstimateData: PriceEstimate = {
@@ -88,10 +88,15 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
     maxPrice: 450,
     estimatedPrice: 365,
     confidence: 'high',
-    factors: ['Standard windscreen replacement', 'No ADAS calibration required', 'Common vehicle model']
+    factors: ['Standard frontruteskift', 'Ingen ADAS-kalibrering nødvendig', 'Vanlig bilmodell']
   };
 
-  const glassTypes = ['Windscreen', 'Side Window', 'Rear Window', 'Sunroof'];
+  const glassTypes = [
+    { value: 'Windscreen', label: 'Frontrute' },
+    { value: 'Side Window', label: 'Siderute' },
+    { value: 'Rear Window', label: 'Bakrute' },
+    { value: 'Sunroof', label: 'Soltak' }
+  ];
 
   const toggleDeveloperMode = () => {
     setIsDeveloperMode(!isDeveloperMode);
@@ -132,7 +137,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       case 'vehicleFound':
         const testVrn = 'DEV123';
         const testDamageDate = '2024-01-15';
-        const testInsuranceCompany = 'Aviva Insurance';
+        const testInsuranceCompany = 'Gjensidige';
         const testGlassType = 'Windscreen';
         
         setVRN(testVrn);
@@ -151,13 +156,13 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       case 'vrnNotFound':
         const notFoundVrn = 'NOTFOUND';
         setVRN(notFoundVrn);
-        setLookupError(`VRN "${notFoundVrn}" not found in our database. Please verify the registration number and try again.`);
+        setLookupError(`VRN "${notFoundVrn}" ble ikke funnet i databasen. Kontroller registreringsnummeret og prøv igjen.`);
         onVRNLookup(notFoundVrn, '', '', '', null, null, null, null, null, false);
         break;
       case 'existingCaseFound':
         const existingVrn = 'DEV123';
         const existingDamageDate = '2024-01-15';
-        const existingInsuranceCompany = 'Aviva Insurance';
+        const existingInsuranceCompany = 'Gjensidige';
         const existingGlassType = 'Windscreen';
         
         setVRN(existingVrn);
@@ -176,7 +181,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       case 'noCoverage':
         const noCoverageVrn = 'DEV123';
         const noCoverageDamageDate = '2024-01-15';
-        const noCoverageInsuranceCompany = 'No Coverage Insurance';
+        const noCoverageInsuranceCompany = 'Ingen dekning Forsikring';
         const noCoverageGlassType = 'Windscreen';
         
         setVRN(noCoverageVrn);
@@ -194,7 +199,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
           covered: false,
           coverageAmount: 0,
           deductible: 0,
-          message: 'No active glass coverage found for this policy',
+          message: 'Ingen aktiv glasdekning funnet for denne polisen',
           insuranceCompany: noCoverageInsuranceCompany
         };
         setCoverageCheck(noCoverageCheck);
@@ -204,14 +209,14 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       case 'coverageNeedsReview':
         const reviewVrn = 'DEV123';
         const reviewDamageDate = '2024-01-15';
-        const reviewInsuranceCompany = 'Complex Insurance Ltd';
+        const reviewInsuranceCompany = 'Kompleks Forsikring AS';
         const reviewGlassType = 'Windscreen';
         
         const reviewCoverageCheck: CoverageCheck = {
           covered: false,
           coverageAmount: 0,
           deductible: 0,
-          message: 'Coverage verification requires manual review due to policy complexity',
+          message: 'Dekningssjekk krever manual review grunnet policy-kompleksitet',
           insuranceCompany: reviewInsuranceCompany
         };
         
@@ -267,7 +272,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       setCoverageCheck(null);
       setPriceEstimate(null);
       setExistingCase(null);
-      setLookupError(`VRN "${vrn.toUpperCase()}" not found in our database. Please verify the registration number and try again.`);
+      setLookupError(`VRN "${vrn.toUpperCase()}" ble ikke funnet i databasen. Kontroller registreringsnummeret og prøv igjen.`);
       setIsLooking(false);
       return;
     }
@@ -277,7 +282,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       make: 'BMW',
       model: 'X3',
       year: 2021,
-      color: 'Black',
+      color: 'Svart',
       vin: '1HGCM82633A123456'
     };
 
@@ -294,7 +299,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       vrn: vrn.toUpperCase(),
       status: 'open',
       createdDate: '2024-01-15',
-      description: 'Windscreen replacement - rear window'
+      description: 'Bytte av frontrute - bakrute'
     } : null;
 
     // Simulate coverage check (80% have coverage)
@@ -303,7 +308,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       covered: hasCoverage,
       coverageAmount: hasCoverage ? 500 : 0,
       deductible: hasCoverage ? 250 : 0,
-      message: hasCoverage ? 'Full glass coverage confirmed' : 'No active glass coverage found for this policy',
+      message: hasCoverage ? 'Full glasdekning bekreftet' : 'Ingen aktiv glasdekning funnet for denne polisen',
       insuranceCompany: insuranceCompany
     };
 
@@ -318,7 +323,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
     const mockPriceResult: PriceEstimate = {
       ...priceData,
       confidence: 'high',
-      factors: [`${glassType} replacement`, 'Standard installation', 'Common vehicle model']
+      factors: ['Standard glasstjeneste', 'Standard installasjon', 'Vanlig bilmodell']
     };
 
     setVehicle(mockVehicle);
@@ -364,7 +369,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6">
       <div className="flex items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Vehicle & Damage Information</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Kjøretøy- og skadedata</h2>
         {hasValidData && <Check className="w-5 h-5 text-green-500 ml-auto" />}
         <button
           onClick={toggleDeveloperMode}
@@ -375,7 +380,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
           }`}
         >
           <Settings className="w-4 h-4 inline mr-1" />
-          Developer Mode
+          Utviklermodus
         </button>
       </div>
 
@@ -384,10 +389,10 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
         <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center mb-3">
             <Settings className="w-4 h-4 text-orange-600 mr-2" />
-            <h3 className="font-medium text-orange-800">Developer Testing Tool</h3>
+            <h3 className="font-medium text-orange-800">Verktøy for utviklertesting</h3>
           </div>
           <p className="text-sm text-orange-700 mb-4">
-            Select a scenario to instantly test different VRN lookup outcomes:
+            Velg et scenario for raskt å teste ulike VRN-oppslag:
           </p>
           
           <div className="flex flex-wrap gap-2">
@@ -399,7 +404,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-               Vehicle Found
+               Kjøretøy funnet
             </button>
             <button
               onClick={() => setScenario('vrnNotFound')}
@@ -409,7 +414,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-               VRN Not Found
+               VRN ikke funnet
             </button>
             <button
               onClick={() => setScenario('noCoverage')}
@@ -419,7 +424,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              No Coverage
+              Ingen dekning
             </button>
             <button
               onClick={() => setScenario('existingCaseFound')}
@@ -429,7 +434,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-               Existing Case Found
+               Eksisterende sak funnet
             </button>
             <button
               onClick={() => setScenario('coverageNeedsReview')}
@@ -439,20 +444,20 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Coverage Needs Review
+              Dekning krever manual review
             </button>
           </div>
           
           {activeScenario && (
             <div className="mt-3 p-3 bg-white rounded border border-orange-200">
               <p className="text-sm text-orange-700">
-                <strong>Active Scenario:</strong> {
-                  activeScenario === 'vehicleFound' ? 'Vehicle Found - Shows successful lookup with vehicle and owner details' :
-                  activeScenario === 'vrnNotFound' ? 'VRN Not Found - Shows error message when VRN is not in database' :
-                  activeScenario === 'noCoverage' ? 'No Coverage - Shows vehicle found but no insurance coverage' :
-                  activeScenario === 'existingCaseFound' ? 'Existing Case Found - Shows vehicle details with existing case warning' :
-                  activeScenario === 'coverageNeedsReview' ? 'Coverage Needs Review - Shows vehicle found but coverage requires manual review' :
-                  'Unknown scenario'
+                <strong>Aktivt scenario:</strong> {
+                  activeScenario === 'vehicleFound' ? 'Kjøretøy funnet - viser vellykket oppslag med kjøretøy- og eierdata' :
+                  activeScenario === 'vrnNotFound' ? 'VRN ikke funnet - viser feilmelding når VRN mangler i databasen' :
+                  activeScenario === 'noCoverage' ? 'Ingen dekning - viser kjøretøy funnet uten forsikringsdekning' :
+                  activeScenario === 'existingCaseFound' ? 'Eksisterende sak funnet - viser kjøretøydata med varsel' :
+                  activeScenario === 'coverageNeedsReview' ? 'Dekning krever manual review - viser funn som må vurderes manuelt' :
+                  'Ukjent scenario'
                 }
               </p>
             </div>
@@ -462,20 +467,20 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
       <div className="space-y-6">
         {/* Search Form */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Search Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Søkeinformasjon</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {/* VRN Input */}
             <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Vehicle Registration Number (VRN) <span className="text-red-500">*</span>
+            Registreringsnummer (VRN) <span className="text-red-500">*</span>
           </label>
               <div className="flex-1 relative">
                 <input
                   type="text"
                   value={vrn}
                   onChange={(e) => handleVrnChange(e.target.value)}
-                  placeholder="Enter VRN (e.g., AB12 CDE)"
+                  placeholder="Skriv inn VRN (f.eks. AB12 CDE)"
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
                     lookupError ? 'border-red-300 bg-red-50' : 
                     hasValidData ? 'border-green-300 bg-green-50' : 
@@ -496,7 +501,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Calendar className="w-4 h-4 inline mr-1" />
-                Damage Date <span className="text-red-500">*</span>
+                Skadedato <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -511,13 +516,13 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Building2 className="w-4 h-4 inline mr-1" />
-                Insurance Company <span className="text-red-500">*</span>
+                Forsikringsselskap <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={insuranceCompany}
                 onChange={(e) => setInsuranceCompany(e.target.value)}
-                placeholder="e.g., Aviva Insurance"
+                placeholder="f.eks. If, Gjensidige"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isLooking}
               />
@@ -526,7 +531,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             {/* Glass Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Glass Type <span className="text-red-500">*</span>
+                Glasstype <span className="text-red-500">*</span>
               </label>
               <select
                 value={glassType}
@@ -534,9 +539,9 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isLooking}
               >
-                <option value="">Select glass type</option>
+                <option value="">Velg glasstype</option>
                 {glassTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
+                  <option key={type.value} value={type.value}>{type.label}</option>
                 ))}
               </select>
             </div>
@@ -552,12 +557,12 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                 {isLooking ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Searching...
+                    Søker...
                   </>
                 ) : (
                   <>
               
-                    Search Vehicle & Coverage
+                    Søk kjøretøy og dekning
                   </>
                 )}
               </button>
@@ -567,7 +572,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
           {!isFormValid && (vrn.length > 0 || damageDate || insuranceCompany || glassType) && (
               <div className="flex items-center text-sm text-red-600">
                 <X className="w-4 h-4 mr-2" />
-              <span>Please fill in all required fields</span>
+              <span>Fyll inn alle obligatoriske felter</span>
               </div>
             )}
         </div>
@@ -578,14 +583,14 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             <div className="flex items-start">
               <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
               <div>
-                <h3 className="font-medium text-red-800 mb-1">VRN Not Found</h3>
+                <h3 className="font-medium text-red-800 mb-1">VRN ikke funnet</h3>
                 <p className="text-sm text-red-700 mb-3">{lookupError}</p>
                 <div className="text-sm text-red-700">
-                  <strong>Common issues:</strong>
+                  <strong>Vanlige årsaker:</strong>
                   <ul className="list-disc list-inside mt-1 space-y-1">
-                    <li>Check for typos (0 vs O, 1 vs I)</li>
-                    <li>Verify spacing and format</li>
-                    <li>Ensure the vehicle is registered in our system</li>
+                    <li>Sjekk for tastefeil (0 vs O, 1 vs I)</li>
+                    <li>Kontroller mellomrom og format</li>
+                    <li>Bekreft at kjøretøyet finnes i systemet</li>
                   </ul>
                 </div>
               </div>
@@ -603,7 +608,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center mb-3">
                   <Car className="w-5 h-5 text-gray-600 mr-2" />
-                  <h3 className="font-medium text-gray-900">Vehicle Details</h3>
+                  <h3 className="font-medium text-gray-900">Kjøretøydetaljer</h3>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -611,15 +616,15 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                     <span className="font-medium">{vehicle.vrn}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Make/Model:</span>
+                    <span className="text-gray-600">Merke/modell:</span>
                     <span className="font-medium">{vehicle.make} {vehicle.model}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Year:</span>
+                    <span className="text-gray-600">Årsmodell:</span>
                     <span className="font-medium">{vehicle.year}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Color:</span>
+                    <span className="text-gray-600">Farge:</span>
                     <span className="font-medium">{vehicle.color}</span>
                   </div>
                   <div className="flex justify-between">
@@ -633,23 +638,23 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center mb-3">
                   <User className="w-5 h-5 text-gray-600 mr-2" />
-                  <h3 className="font-medium text-gray-900">Owner Details</h3>
+                  <h3 className="font-medium text-gray-900">Eierinformasjon</h3>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="text-gray-600">Name:</span>
+                    <span className="text-gray-600">Navn:</span>
                     <div className="font-medium">{owner.name}</div>
                   </div>
                   <div>
-                    <span className="text-gray-600">Address:</span>
+                    <span className="text-gray-600">Adresse:</span>
                     <div className="font-medium">{owner.address}</div>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Phone:</span>
+                    <span className="text-gray-600">Telefon:</span>
                     <span className="font-medium">{owner.phone}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
+                    <span className="text-gray-600">E-post:</span>
                     <span className="font-medium text-xs">{owner.email}</span>
                   </div>
                 </div>
@@ -673,7 +678,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                       coverageCheck.covered ? 'text-green-900' : 
                       coverageCheck.message.includes('manual review') ? 'text-purple-900' : 'text-red-900'
                     }`}>
-                      Insurance Coverage
+                      Forsikringsdekning
                     </h3>
                   </div>
                   <div className="space-y-2 text-sm">
@@ -683,19 +688,19 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                         coverageCheck.covered ? 'text-green-800' : 
                         coverageCheck.message.includes('manual review') ? 'text-purple-800' : 'text-red-800'
                       }`}>
-                        {coverageCheck.covered ? 'Covered' : 
-                         coverageCheck.message.includes('manual review') ? 'Needs Review' : 'Not Covered'}
+                        {coverageCheck.covered ? 'Dekket' : 
+                         coverageCheck.message.includes('manual review') ? 'Krever manual review' : 'Ikke dekket'}
                       </span>
                     </div>
                     {coverageCheck.covered && (
                       <>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Coverage:</span>
-                          <span className="font-medium">£{coverageCheck.coverageAmount}</span>
+                          <span className="text-gray-600">Dekning:</span>
+                          <span className="font-medium">kr {coverageCheck.coverageAmount}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Deductible:</span>
-                          <span className="font-medium">£{coverageCheck.deductible}</span>
+                          <span className="text-gray-600">Egenandel:</span>
+                          <span className="font-medium">kr {coverageCheck.deductible}</span>
                         </div>
                       </>
                     )}
@@ -723,14 +728,14 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             <div className="flex items-start">
               <AlertTriangle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
               <div className="flex-1">
-                <h3 className="font-medium text-yellow-800 mb-2">Existing Case Found</h3>
+                <h3 className="font-medium text-yellow-800 mb-2">Eksisterende sak funnet</h3>
                 <p className="text-sm text-yellow-700 mb-3">
-                  <strong>Important:</strong> An open case already exists for this vehicle. You must choose how to proceed:
+                  <strong>Viktig:</strong> Det finnes allerede en åpen sak for dette kjøretøyet. Velg hvordan du vil fortsette:
                 </p>
                 <div className="bg-white rounded-lg p-3 mb-4 border border-yellow-200">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600">Case ID:</span>
+                      <span className="text-gray-600">Saks-ID:</span>
                       <div className="font-medium">{existingCase.id}</div>
                     </div>
                     <div>
@@ -738,29 +743,29 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                       <div className="font-medium capitalize">{existingCase.status}</div>
                     </div>
                     <div>
-                      <span className="text-gray-600">Created:</span>
+                      <span className="text-gray-600">Opprettet:</span>
                       <div className="font-medium">{existingCase.createdDate}</div>
                     </div>
                     <div>
-                      <span className="text-gray-600">Description:</span>
+                      <span className="text-gray-600">Beskrivelse:</span>
                       <div className="font-medium">{existingCase.description}</div>
                     </div>
                   </div>
                 </div>
                 
                 <div className="bg-yellow-100 rounded-lg p-3 mb-4">
-                  <h4 className="font-medium text-yellow-800 mb-2">Choose an option:</h4>
+                  <h4 className="font-medium text-yellow-800 mb-2">Velg et alternativ:</h4>
                   <div className="text-sm text-yellow-700 space-y-2">
                     <div className="flex items-start">
                       <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></div>
                       <div>
-                        <strong>Continue Existing Case:</strong> Add to or update the current case
+                        <strong>Fortsett eksisterende sak:</strong> Legg til eller oppdater den pågående saken
                       </div>
                     </div>
                     <div className="flex items-start">
                       <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></div>
                       <div>
-                        <strong>Create New Case:</strong> Start a separate case for this vehicle
+                        <strong>Opprett ny sak:</strong> Start en egen sak for dette kjøretøyet
                       </div>
                     </div>
                   </div>
@@ -771,13 +776,13 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                     onClick={handleContinueExisting}
                     className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
-                    Continue Existing Case
+                    Fortsett eksisterende sak
                   </button>
                   <button
                     onClick={handleCreateNew}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   >
-                    Create New Case
+                    Opprett ny sak
                   </button>
                 </div>
               </div>
@@ -791,9 +796,9 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             <div className="flex items-center">
               <Check className="w-5 h-5 text-green-600 mr-3" />
               <div>
-                <h3 className="font-medium text-green-800">Ready to Continue</h3>
+                <h3 className="font-medium text-green-800">Klar til å fortsette</h3>
                 <p className="text-sm text-green-700">
-                  Vehicle and owner information verified. You can now proceed to the next step.
+                  Kjøretøy- og eierinformasjon er verifisert. Du kan gå videre til neste steg.
                 </p>
               </div>
             </div>
@@ -810,16 +815,16 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                 <Info className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Continue Existing Case
+                Fortsett eksisterende sak
               </h3>
               <p className="text-gray-600 mb-6">
-                User is guided to the existing case
+                Brukeren sendes videre til eksisterende sak
               </p>
               <button
                 onClick={closeGuidanceModal}
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Close
+                Lukk
               </button>
             </div>
           </div>
@@ -834,7 +839,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
             className="flex items-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
           >
             <StopCircle className="w-4 h-4 mr-2" />
-            Stop Process
+            Stopp prosess
           </button>
         </div>
       )}

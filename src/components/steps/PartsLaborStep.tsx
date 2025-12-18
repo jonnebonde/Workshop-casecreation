@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Plus, 
   Trash2, 
@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { RepairItem, RepairCategory, PriceAgreementResult } from '../../types/case';
 
-// Suggested repair items based on glass type
+// Foreslåtte reparasjonsposter basert på glasstype
 const getSuggestedRepairItems = (glassType: string): RepairItem[] => {
   const baseId = Date.now();
   
@@ -196,7 +196,7 @@ const getSuggestedRepairItems = (glassType: string): RepairItem[] => {
 
 interface PartsLaborStepProps {
   glassType: string;
-  customerDeductible: number;
+  customerEgenandel: number;
   initialRepairItems: RepairItem[];
   onRepairItemsUpdated: (items: RepairItem[]) => void;
   initialCalibrationNeeded: boolean;
@@ -372,7 +372,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
         break;
       case 'uploadFailed':
         setCalibrationDocument(null);
-        setCalibrationFileError('Failed uploading your document, please try again.');
+        setCalibrationFileError('Kunne ikke laste opp dokumentet, prøv igjen.');
         handleCalibrationDocumentChange(null);
         break;
       case 'noDocument':
@@ -389,15 +389,15 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
     const errors: string[] = [];
     
     if (repairItems.length === 0) {
-      errors.push('At least one repair item is required');
+      errors.push('Minst én reparasjonspost er nødvendig');
     }
 
     repairItems.forEach((item, index) => {
       if (item.quantity <= 0) {
-        errors.push(`Item ${index + 1}: Quantity must be greater than 0`);
+        errors.push(`Post ${index + 1}: Antall må være større enn 0`);
       }
       if (item.unitPrice < 0) {
-        errors.push(`Item ${index + 1}: Unit price cannot be negative`);
+        errors.push(`Post ${index + 1}: Enhetspris kan ikke være negativ`);
       }
     });
 
@@ -410,7 +410,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
   };
 
   const handleCalibrationDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.fileskr.[0];
     if (!file) return;
 
     // Skip processing if in developer mode with active scenario
@@ -423,9 +423,9 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
 
     let error: string | null = null;
     if (file.size > maxSize) {
-      error = 'File size must be less than 10MB';
+      error = 'Filstørrelsen må være under 10MB';
     } else if (!allowedTypes.includes(file.type)) {
-      error = 'File must be PDF, JPG, or PNG format';
+      error = 'Filen må være i PDF-, JPG- eller PNG-format';
     }
 
     if (error) {
@@ -460,8 +460,8 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900"> Parts & Labor Details</h2>
-            <p className="text-sm text-gray-600">Add repair items and specify calibration requirements</p>
+            <h2 className="text-xl font-semibold text-gray-900"> Deler og arbeid</h2>
+            <p className="text-sm text-gray-600">Legg til reparasjonsposter og angi kalibreringsbehov</p>
           </div>
         </div>
 
@@ -477,14 +477,14 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
               <div className="text-gray-400 mb-4">
                 <Plus className="w-12 h-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No repair items added</h3>
-              <p className="text-gray-600 mb-4">Start by adding your first repair item</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Ingen reparasjonsposter</h3>
+              <p className="text-gray-600 mb-4">Start med å legge til første reparasjonspost</p>
               <button
                 onClick={addItem}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add First Item
+                Legg til første post
               </button>
             </div>
           ) : (
@@ -505,17 +505,17 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       <button
                         onClick={() => removeItem(item.id)}
                         className="text-red-500 hover:text-red-700 transition-colors p-1"
-                        title="Remove item"
+                        title="Fjern post"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
-                      {/* Category */}
+                      {/* Kategori */}
                       <div className="lg:col-span-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Category <span className="text-red-500">*</span>
+                          Kategori <span className="text-red-500">*</span>
                         </label>
                         <select
                           value={item.category}
@@ -528,25 +528,25 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                         </select>
                       </div>
 
-                      {/* Article Number */}
+                      {/* Artikkelnummer */}
                       <div className="lg:col-span-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Article Number
+                          Artikkelnummer
                         </label>
                         <input
                           type="text"
                           value={item.articleNumber || ''}
                           onChange={(e) => updateItem(item.id, { articleNumber: e.target.value })} 
-                          placeholder="Enter article number"
+                          placeholder="Skriv inn artikkelnummer"
                           className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
 
 
-                      {/* Quantity */}
+                      {/* Antall */}
                       <div className="lg:col-span-1">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Quantity <span className="text-red-500">*</span>
+                          Antall <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -557,10 +557,10 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                         />
                       </div>
 
-                      {/* Unit Price */}
+                      {/* Enhetspris */}
                       <div className="lg:col-span-2">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Unit Price (£) <span className="text-red-500">*</span>
+                          Enhetspris (kr) <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -575,7 +575,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       {/* Discount */}
                       <div className="lg:col-span-1">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Discount (%)
+                          Rabatt (%)
                         </label>
                         <input
                           type="number"
@@ -587,21 +587,21 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                         />
                       </div>
 
-                      {/* Item Total */}
+                      {/* Sum per post */}
                       <div className="lg:col-span-2">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Item Total
+                          Sum per post
                         </label>
                         <div className="bg-white rounded p-2 border border-gray-200 ">
                           <div className="flex justify-between items-center text-xs">
                             <div className="text-right">
                               {item.discount > 0 && (
                                 <div className="text-gray-400 line-through">
-                                  £{(item.unitPrice * item.quantity).toFixed(2)}
+                                  kr{(item.unitPrice * item.quantity).toFixed(2)}
                                 </div>
                               )}
                               <div className="font-semibold text-gray-900">
-                                £{totalPrice.toFixed(2)}
+                                kr{totalPrice.toFixed(2)}
                               </div>
                             </div>
                           </div>
@@ -614,14 +614,14 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
             </div>
           )}
 
-          {/* Add Item Button */}
+          {/* Legg til post Button */}
           {repairItems.length > 0 && (
             <button
               onClick={addItem}
               className="flex items-center justify-center px-6 py-3 mt-4 text-base bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-5 h-5 mr-2" />
-              Add Item
+              Legg til post
             </button>
           )}
 
@@ -635,20 +635,20 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                     <>
                       {/* Sum of parts and labor */}
                       <div className="flex justify-between items-center text-sm text-gray-700 mb-2"> 
-                        <span>Subtotal:</span>
-                        <span>£{totals.subtotal.toFixed(2)}</span>
+                        <span>Delsum:</span>
+                        <span>kr{totals.subtotal.toFixed(2)}</span>
                       </div>
                       
                       {/* VAT */}
                       <div className="flex justify-between items-center text-sm text-gray-700 mb-2">
-                        <span>VAT (25%):</span>
-                        <span>£{totals.vatAmount.toFixed(2)}</span>
+                        <span>MVA (25%):</span>
+                        <span>kr{totals.vatAmount.toFixed(2)}</span>
                       </div>
                       
                       {/* Deductible (if applicable) */}
                       <div className="flex justify-between items-center text-sm text-red-600 mb-2">
-                        <span>Deductible:</span>
-                        <span>-£{totals.deductible.toFixed(2)}</span>
+                        <span>Egenandel:</span>
+                        <span>-kr{totals.deductible.toFixed(2)}</span>
                       </div>
                       
                       {/* Separator line */}
@@ -656,9 +656,9 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       
                       {/* Final Total */}
                       <div className="flex justify-between items-center">
-                        <h4 className="text-base font-semibold text-gray-900">Total to Pay:</h4>
+                        <h4 className="text-base font-semibold text-gray-900">Sum kr betale:</h4>
                         <div className="text-xl font-bold text-gray-900">
-                          £{totals.finalTotal.toFixed(2)}
+                          kr{totals.finalTotal.toFixed(2)}
                         </div>
                       </div>
                     </>
@@ -669,13 +669,13 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
           )}
         </div>
 
-        {/* Calibration Information Section */}
+        {/* Kalibreringsinformasjon Section */}
         <div className="border-t pt-6">
           <div className="flex items-center mb-4">
           
             <div>
-              <h3 className="text-lg font-medium text-gray-900"> Calibration Information</h3>
-              <p className="text-sm text-gray-600">Specify if this repair requires calibration work</p>
+              <h3 className="text-lg font-medium text-gray-900"> Kalibreringsinformasjon</h3>
+              <p className="text-sm text-gray-600">Angi om reparasjonen krever kalibrering</p>
             </div>
             <button
               onClick={toggleDeveloperMode}
@@ -686,7 +686,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
               }`}
             >
               <Settings className="w-4 h-4 inline mr-1" />
-              Developer Mode
+              Utviklermodus
             </button>
           </div>
 
@@ -695,10 +695,10 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
             <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
               <div className="flex items-center mb-3">
                 <Settings className="w-4 h-4 text-orange-600 mr-2" />
-                <h3 className="font-medium text-orange-800">Developer Testing Tool</h3>
+                <h3 className="font-medium text-orange-800">Testverktkry for utvikler</h3>
               </div>
               <p className="text-sm text-orange-700 mb-4">
-                Select a scenario to instantly test different calibration document upload outcomes:
+                Velg et scenario for raskt kr teste ulike utfall for kalibreringsopplasting:
               </p>
               
               <div className="flex flex-wrap gap-2">
@@ -710,7 +710,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                   }`}
                 >
-                  Upload Success
+                  Opplasting vellykket
                 </button>
                 <button
                   onClick={() => setScenario('uploadFailed')}
@@ -720,7 +720,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                   }`}
                 >
-                  Upload Failed
+                  Opplasting feilet
                 </button>
                 <button
                   onClick={() => setScenario('noDocument')}
@@ -730,18 +730,18 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                   }`}
                 >
-                  No Document
+                  Ingen dokument
                 </button>
               </div>
               
               {activeScenario && (
                 <div className="mt-3 p-3 bg-white rounded border border-orange-200">
                   <p className="text-sm text-orange-700">
-                    <strong>Active Scenario:</strong> {
-                      activeScenario === 'uploadSuccess' ? 'Upload Success - Shows successful document upload with file details' :
-                      activeScenario === 'uploadFailed' ? 'Upload Failed - Shows file validation error with retry options' :
-                      activeScenario === 'noDocument' ? 'No Document - Shows initial upload state' :
-                      'Unknown scenario'
+                    <strong>Aktivt scenario:</strong> {
+                      activeScenario === 'uploadSuccess' ? 'Opplasting vellykket - viser lastet dokument med detaljer' :
+                      activeScenario === 'uploadFailed' ? 'Opplasting feilet - viser filvalideringsfeil med mulighet for nytt forsøk' :
+                      activeScenario === 'noDocument' ? 'Ingen dokument - viser starttilstand uten opplasting' :
+                      'Ukjent scenario'
                     }
                   </p>
                 </div>
@@ -757,7 +757,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                 <div className="ml-3">
                   <label htmlFor="calibration-needed" className="text-sm font-medium text-gray-700">
              
-                    Does this repair require calibration?
+                    Krever denne reparasjonen kalibreringkr
                   </label>
                       <input
                   type="checkbox"
@@ -767,7 +767,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                   className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded ml-3 "
                 />
                   <p className="text-xs text-gray-500 mt-1">
-                    Check this if the glass replacement affects ADAS systems, cameras, or sensors
+                    Huk av hvis glassbyttet pkrvirker ADAS-systemer, kameraer eller sensorer
                   </p>
                 </div>
               </div>
@@ -775,7 +775,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
               {!calibrationNeeded && (
                 <div className="mt-3 ml-7 flex items-center text-green-600 text-sm">
                   <Check className="w-4 h-4 mr-1" />
-                  No calibration required - section complete
+                  Ingen kalibrering nkrdvendig - seksjonen er komplett
                 </div>
               )}
             </div>
@@ -785,20 +785,20 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 space-y-4">
                 <div className="flex items-center text-purple-800 mb-3">
                   <AlertTriangle className="w-4 h-4 mr-2" />
-                  <span className="font-medium"> Calibration Required - Please Complete</span>
+                  <span className="font-medium"> Kalibrering kreves - fullfør feltene</span>
                 </div>
 
                 {/* Signature Field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <PenTool className="w-4 h-4 inline mr-1" />
-                    Technician Signature <span className="text-red-500">*</span>
+                    Tekniker-signatur <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={calibrationSignature}
                     onChange={(e) => handleCalibrationSignatureChange(e.target.value)}
-                    placeholder="Enter technician name/signature"
+                    placeholder="Skriv inn navn/signatur til tekniker"
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
                       calibrationSignature.trim() ? 'border-green-300 bg-green-50' : 'border-gray-300'
                     }`}
@@ -806,11 +806,11 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                   {calibrationSignature.trim() ? (
                     <div className="mt-1 flex items-center text-green-600 text-sm">
                       <Check className="w-3 h-3 mr-1" />
-                      Signature provided
+                      Signatur lagt inn
                     </div>
                   ) : (
                     <p className="mt-1 text-xs text-gray-500">
-                      Required: Name or signature of technician performing calibration
+                      Påkrevd: Navn eller signatur til teknikeren som utfører kalibreringen
                     </p>
                   )}
                 </div>
@@ -819,7 +819,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <FileText className="w-4 h-4 inline mr-1" />
-                    Calibration Document (Optional)
+                    Kalibreringsdokument (valgfritt)
                   </label>
                   
                   {calibrationDocument ? (
@@ -839,7 +839,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                         <button
                           onClick={removeCalibrationDocument}
                           className="text-red-500 hover:text-red-700 transition-colors"
-                          title="Remove document"
+                          title="Fjern dokument"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -850,10 +850,10 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                       <div className="text-center">
                         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                         <div className="text-sm text-gray-600 mb-2">
-                          Upload calibration certificate or documentation
+                          Last opp kalibreringssertifikat eller dokumentasjon
                         </div>
                         <div className="text-xs text-gray-400 mb-3">
-                          PDF, JPG, PNG (max 10MB)
+                          PDF, JPG, PNG (maks 10MB)
                         </div>
                         <input
                           type="file"
@@ -867,7 +867,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                           className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          Choose File
+                          Velg fil
                         </label>
                       </div>
                     </div>
@@ -882,7 +882,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                           onClick={handleClearCalibrationError}
                           className="ml-3 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
                         >
-                          Try Again
+                          Prøv igjen
                         </button>
                       </div>
                     </div>
@@ -894,7 +894,7 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                   <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                     <div className="flex items-center text-green-800">
                       <Check className="w-4 h-4 mr-2" />
-                      <span className="text-sm font-medium"> Calibration section complete</span>
+                      <span className="text-sm font-medium"> Kalibreringsseksjon fullført</span>
                     </div>
                   </div>
                 )}
@@ -910,10 +910,10 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
              
               <div>
                 <label htmlFor="job-performed-date" className="text-sm font-medium text-gray-700">
-                  Job execution date
+                  Dato utført
                 </label>
                 <p className="text-xs text-gray-500 mt-1">
-                  When was this repair work completed?
+                  Når ble reparasjonsarbeidet fullført?
                 </p> 
               </div>
             </div>
@@ -924,12 +924,12 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
               onChange={(e) => setJobPerformedDate(e.target.value)}
               className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            {jobPerformedDate && (
-              <div className="mt-2 flex items-center text-green-600 text-sm">
-                <Check className="w-4 h-4 mr-1" />
-                Job date recorded: {new Date(jobPerformedDate).toLocaleDateString()}
-              </div>
-            )}
+              {jobPerformedDate && (
+                <div className="mt-2 flex items-center text-green-600 text-sm">
+                  <Check className="w-4 h-4 mr-1" />
+                  Utførelsesdato registrert: {new Date(jobPerformedDate).toLocaleDateString()}
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -940,13 +940,13 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
           <div className="flex items-start">
             <AlertTriangle className="w-4 h-4 text-yellow-600 mr-2 mt-0.5" />
             <div className="text-sm text-yellow-800">
-              <div className="font-medium mb-2">⚠️ Complete the following to finish this step:</div>
+              <div className="font-medium mb-2">Fullfør følgende for å fullføre dette steget:</div>
               <ul className="list-disc list-inside space-y-1">
                 {validateRepairItems().map((issue, index) => (
                   <li key={index}>{issue}</li>
                 ))}
                 {calibrationNeeded && !calibrationSignature.trim() && (
-                  <li>Calibration signature is required when calibration is needed</li>
+                  <li>Kalibreringssignatur er påkrevd når kalibrering er nødvendig</li>
                 )}
               </ul>
             </div>

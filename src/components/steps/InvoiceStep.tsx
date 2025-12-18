@@ -37,11 +37,11 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     
     if (!allowedTypes.includes(file.type)) {
-      return 'Please upload a PDF, JPG, or PNG file only.';
+      return 'Last opp kun PDF-, JPG- eller PNG-filer.';
     }
     
     if (file.size > maxSize) {
-      return `File size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds the 10MB limit.`;
+      return `Filstørrelse (${(file.size / 1024 / 1024).toFixed(1)}MB) overskrider 10MB-grensen.`;
     }
     
     return null;
@@ -82,7 +82,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
         break;
       case 'uploadFailed':
         setInvoice(mockFile);
-        setUploadError('Upload failed. Please try again or choose a different file.');
+        setUploadError('Opplasting feilet. Prøv igjen eller velg en annen fil.');
         onInvoiceUploaded(mockFile);
         break;
       case 'noInvoice':
@@ -169,13 +169,13 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
     const errors: {[key: string]: string} = {};
     
     if (!manualInvoiceNumber.trim()) {
-      errors.invoiceNumber = 'Invoice number is required';
+      errors.invoiceNumber = 'Fakturanummer er påkrevd';
     }
     if (!manualTotalSum.trim() || isNaN(parseFloat(manualTotalSum)) || parseFloat(manualTotalSum) <= 0) {
-      errors.totalSum = 'Valid total sum is required';
+      errors.totalSum = 'Gyldig totalsum er påkrevd';
     }
     if (!manualInvoiceFile) {
-      errors.file = 'Invoice copy is required';
+      errors.file = 'Kopi av faktura er påkrevd';
     }
     
     setManualInputErrors(errors);
@@ -193,7 +193,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
       totalAmount: parseFloat(manualTotalSum),
       invoiceNumber: manualInvoiceNumber,
       invoiceDate: new Date().toISOString().split('T')[0],
-      companyName: 'Manual Entry',
+      companyName: 'Manuell registrering',
       kidNumber: manualKidNumber || undefined,
       dueDate: manualDueDate || undefined
     };
@@ -225,7 +225,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
     <div className="bg-white rounded-lg shadow-sm border p-6">
       <div className="flex items-center mb-6">
         <FileText className="w-6 h-6 text-blue-600 mr-3" />
-        <h2 className="text-xl font-semibold text-gray-900">Invoice Upload</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Fakturainnsending</h2>
         {invoice && <Check className="w-5 h-5 text-green-500 ml-auto" />}
         <button
           onClick={toggleDeveloperMode}
@@ -236,7 +236,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
           }`}
         >
           <Settings className="w-4 h-4 inline mr-1" />
-          Developer Mode
+          Utviklermodus
         </button>
       </div>
 
@@ -245,10 +245,10 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
         <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center mb-3">
             <Settings className="w-4 h-4 text-orange-600 mr-2" />
-            <h3 className="font-medium text-orange-800">Developer Testing Tool</h3>
+            <h3 className="font-medium text-orange-800">Testverktøy for utvikler</h3>
           </div>
           <p className="text-sm text-orange-700 mb-4">
-            Select a scenario to instantly test different invoice upload outcomes:
+            Velg et scenario for å teste ulike utfall for fakturaopplasting:
           </p>
           
           <div className="flex flex-wrap gap-2">
@@ -260,7 +260,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Upload Success
+              Opplasting vellykket
             </button>
             <button
               onClick={() => setScenario('uploadFailed')}
@@ -270,7 +270,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Upload Failed
+              Opplasting feilet
             </button>
             <button
               onClick={() => setScenario('noInvoice')}
@@ -280,7 +280,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              No Invoice
+              Ingen faktura
             </button>
             <button
               onClick={() => setScenario('showManualInput')}
@@ -290,19 +290,19 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Show Manual Input
+              Vis manuelt skjema
             </button>
           </div>
           
           {activeScenario && (
             <div className="mt-3 p-3 bg-white rounded border border-orange-200">
               <p className="text-sm text-orange-700">
-                <strong>Active Scenario:</strong> {
-                  activeScenario === 'uploadSuccess' ? 'Upload Success - Shows successful invoice upload' :
-                  activeScenario === 'uploadFailed' ? 'Upload Failed - Shows upload failure with retry options' :
-                  activeScenario === 'noInvoice' ? 'No Invoice - Shows initial upload state' :
-                  activeScenario === 'showManualInput' ? 'Manual Input - Shows manual data entry form' :
-                  'Unknown scenario'
+                <strong>Aktivt scenario:</strong> {
+                  activeScenario === 'uploadSuccess' ? 'Opplasting vellykket - viser en opplastet faktura' :
+                  activeScenario === 'uploadFailed' ? 'Opplasting feilet - viser feilmelding med mulighet for nytt forsøk' :
+                  activeScenario === 'noInvoice' ? 'Ingen faktura - viser starttilstand for opplasting' :
+                  activeScenario === 'showManualInput' ? 'Manuelt skjema - viser manuelt registreringsskjema' :
+                  'Ukjent scenario'
                 }
               </p>
             </div>
@@ -313,26 +313,26 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
       {/* Invoice Content */}
       {invoice ? (
           <div className="space-y-6">
-            {/* Upload Error - Show first if present */}
+            {/* Feil ved opplasting - Show first if present */}
             {uploadError ? (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <div className="flex items-start">
                   <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
                   <div className="flex-1">
-                    <h3 className="font-medium text-red-800">❌ Invoice Upload Failed</h3>
+                    <h3 className="font-medium text-red-800">Fakturaopplasting feilet</h3>
                     <p className="text-sm text-red-700 mb-4">{uploadError}</p>
                     <div className="flex space-x-3">
                       <button
                         onClick={() => setUploadError(null)}
                         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                       >
-                        Try Again
+                        Prøv igjen
                       </button>
                       <button
                         onClick={handleShowManualInput}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        Enter Manually
+                        Legg inn manuelt
                       </button>
                     </div>
                   </div>
@@ -341,8 +341,8 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                 {/* Show file info even when failed */}
                 <div className="mt-4 bg-white rounded-lg p-3 border border-red-200">
                   <div className="text-sm text-red-700">
-                    <p><strong>Failed File:</strong> {invoice.name}</p>
-                    <p><strong>Size:</strong> {(invoice.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <p><strong>Feilet fil:</strong> {invoice.name}</p>
+                    <p><strong>Størrelse:</strong> {(invoice.size / 1024 / 1024).toFixed(2)} MB</p>
                     <p><strong>Type:</strong> {invoice.type}</p>
                   </div>
                 </div>
@@ -354,10 +354,10 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   <div className="flex items-start">
                     <FileText className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
                     <div>
-                      <h3 className="font-medium text-green-800">✅ Invoice Uploaded Successfully</h3>
+                      <h3 className="font-medium text-green-800">Faktura lastet opp</h3>
                       <div className="mt-2 space-y-1 text-sm text-green-700">
-                        <p><strong>File:</strong> {invoice.name}</p>
-                        <p><strong>Size:</strong> {(invoice.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <p><strong>Fil:</strong> {invoice.name}</p>
+                        <p><strong>Størrelse:</strong> {(invoice.size / 1024 / 1024).toFixed(2)} MB</p>
                         <p><strong>Type:</strong> {invoice.type}</p>
                       </div>
                     </div>
@@ -365,7 +365,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   <button
                     onClick={removeInvoice}
                     className="text-red-500 hover:text-red-700 transition-colors"
-                    title="Remove invoice"
+                    title="Fjern faktura"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -384,7 +384,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                     className="inline-flex items-center px-4 py-2 bg-white text-green-700 border border-green-300 rounded-lg hover:bg-green-50 cursor-pointer transition-colors"
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Replace Invoice
+                    Bytt faktura
                   </label>
                 </div>
               </div>
@@ -393,31 +393,31 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
           </div>
         ) : (
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Upload Invoice Document</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Last opp fakturadokument</h3>
             
             {/* Upload Requirements */}
             <div className="bg-gray-50 rounded-lg p-4 mb-4">
               <div className="flex items-start">
                 <HelpCircle className="w-5 h-5 text-gray-600 mr-3 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Upload Requirements:</h4>
+                  <h4 className="font-medium text-gray-700 mb-2">Krav til opplasting:</h4>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• <strong>Supported formats:</strong> PDF, JPG, PNG</li>
-                    <li>• <strong>Maximum file size:</strong> 10MB</li>
-                    <li>• <strong>Quality:</strong> Document should be clear and readable</li>
-                    <li>• <strong>Content:</strong> Must include repair items and total amounts</li>
+                    <li>• <strong>Støttede formater:</strong> PDF, JPG, PNG</li>
+                    <li>• <strong>Maks filstørrelse:</strong> 10MB</li>
+                    <li>• <strong>Kvalitet:</strong> Dokumentet bør være tydelig og lesbart</li>
+                    <li>• <strong>Innhold:</strong> Må inkludere reparasjonsposter og totalsummer</li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            {/* Upload Error */}
+            {/* Feil ved opplasting */}
             {uploadError && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <div className="flex items-start">
                   <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-red-800">Upload Error</h4>
+                    <h4 className="font-medium text-red-800">Feil ved opplasting</h4>
                     <p className="text-sm text-red-700">{uploadError}</p>
                   </div>
                 </div>
@@ -438,9 +438,9 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
             >
               <div className="text-center">
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Upload Invoice Document</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Last opp fakturadokument</h3>
                 <p className="text-sm text-gray-500 mb-6">
-                  Drag and drop your invoice here, or click to select a file
+                  Dra og slipp fakturaen her, eller klikk for å velge en fil
                 </p>
                 
                 <input
@@ -455,7 +455,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                   className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  Choose File
+                  Velg fil
                 </label>
               </div>
             </div>
@@ -467,23 +467,23 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Edit className="w-5 h-5 text-blue-600 mr-2" />
-            <h3 className="text-lg font-medium text-blue-800">Manual Invoice Entry</h3>
+            <h3 className="text-lg font-medium text-blue-800">Manuell fakturainnsending</h3>
           </div>
           <p className="text-sm text-blue-700 mb-6">
-            Please enter the invoice information manually and upload a copy of the invoice.
+            Legg inn fakturainformasjon manuelt og last opp en kopi av fakturaen.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Invoice Number */}
+            {/* Fakturanummer */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Invoice Number <span className="text-red-500">*</span>
+                Fakturanummer <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={manualInvoiceNumber}
                 onChange={(e) => setManualInvoiceNumber(e.target.value)}
-                placeholder="Enter invoice number"
+                placeholder="Skriv inn fakturanummer"
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   manualInputErrors.invoiceNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
@@ -493,24 +493,24 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
               )}
             </div>
 
-            {/* KID Number */}
+            {/* KID-nummer */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                KID Number
+                KID-nummer
               </label>
               <input
                 type="text"
                 value={manualKidNumber}
                 onChange={(e) => setManualKidNumber(e.target.value)}
-                placeholder="Enter KID number (optional)"
+                placeholder="Skriv inn KID-nummer (valgfritt)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
-            {/* Due Date */}
+            {/* Forfallsdato */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Due Date
+                Forfallsdato
               </label>
               <input
                 type="date"
@@ -523,7 +523,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
             {/* Total Sum */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Total Sum (£) <span className="text-red-500">*</span>
+                Totalsum (kr) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -531,7 +531,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                 min="0"
                 value={manualTotalSum}
                 onChange={(e) => setManualTotalSum(e.target.value)}
-                placeholder="Enter total amount"
+                placeholder="Skriv inn totalbeløp"
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   manualInputErrors.totalSum ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
@@ -545,7 +545,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
           {/* Invoice Copy Upload */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Upload Invoice Copy <span className="text-red-500">*</span>
+              Last opp fakturakopi <span className="text-red-500">*</span>
             </label>
             {manualInvoiceFile ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-3">
@@ -588,7 +588,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                     className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Choose File
+                    Velg fil
                   </label>
                   <p className="text-xs text-gray-400 mt-2">PDF, JPG, PNG (max 10MB)</p>
                 </div>
@@ -605,13 +605,13 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
               onClick={handleConfirmManualInput}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Confirm Manual Input
+              Bekreft manuell registrering
             </button>
             <button
               onClick={() => setShowManualInput(false)}
               className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
             >
-              Cancel
+              Avbryt
             </button>
           </div>
         </div>

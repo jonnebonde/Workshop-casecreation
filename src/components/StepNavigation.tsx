@@ -29,10 +29,10 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
 }) => {
   const getNextStepText = () => {
     if (isLastStep) {
-      return 'Submit Case';
+      return 'Send inn sak';
     }
     const nextStep = steps[currentStep + 1];
-    return nextStep ? `Continue to ${nextStep.title}` : 'Continue';
+    return nextStep ? `Fortsett til ${nextStep.title}` : 'Fortsett';
   };
 
   return (
@@ -44,7 +44,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
           className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
-          <span className="hidden sm:inline">Previous</span>
+          <span className="hidden sm:inline">Forrige</span>
         </button>
       )}
 
@@ -55,7 +55,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
             className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
           >
             <StopCircle className="w-4 h-4 mr-2" />
-            Stop Process
+            Stopp prosess
           </button>
         )}
         
@@ -68,12 +68,12 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
             {isSavingDraft ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Saving...
+                Lagrer...
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                Save as Draft
+                Lagre som kladd
               </>
             )}
           </button>
@@ -84,7 +84,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
           disabled={!canProceed}
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 transition-colors text-sm font-medium"
         >
-          <span className="sm:hidden">{isLastStep ? 'Submit' : 'Next'}</span>
+          <span className="sm:hidden">{isLastStep ? 'Send inn' : 'Neste'}</span>
           <span className="hidden sm:inline">
             {getNextStepText()}
           </span>

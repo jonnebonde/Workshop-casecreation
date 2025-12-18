@@ -50,13 +50,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
   const getStatusText = (step: Step) => {
     switch (step.status) {
       case 'complete':
-        return 'Complete';
+        return 'Fullført';
       case 'error':
-        return 'Attention needed';
+        return 'Krever oppmerksomhet';
       case 'pending':
-        return 'To be added later';
+        return 'Legges til senere';
       default:
-        return 'Incomplete';
+        return 'Ikke fullført';
     }
   };
   const getStepColor = (step: Step, index: number) => {
@@ -84,7 +84,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
             <span className="text-sm">
-              {steps[currentStep - 1]?.title || 'Previous'}
+              {steps[currentStep - 1]?.title || 'Forrige'}
             </span>
           </button>
         )}
@@ -99,7 +99,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
             className="flex items-center text-gray-600 hover:text-gray-800"
           >
             <span className="text-sm">
-              {steps[currentStep + 1]?.title || 'Next'}
+              {steps[currentStep + 1]?.title || 'Neste'}
             </span>
             <ChevronRight className="w-4 h-4 ml-1" />
           </button>
@@ -117,7 +117,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
                   : ''
               }`}
               onClick={() => handleStepClick(index)}
-              title={onStepClick && index !== currentStep ? `Go to ${step.title}` : undefined}
+              title={onStepClick && index !== currentStep ? `Gå til ${step.title}` : undefined}
             >
               <div className={`w-6 h-6 rounded-full flex items-center justify-center ${getStepColor(step, index)}`}>
                 {getStepIcon(step, index)}
@@ -129,10 +129,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
                   {step.title}
                 </p>
                 {step.status === 'error' && (
-                  <p className="text-xs text-red-500 mt-1 whitespace-nowrap hidden sm:block">Attention needed</p>
+                  <p className="text-xs text-red-500 mt-1 whitespace-nowrap hidden sm:block">Krever oppmerksomhet</p>
                 )}
                 {step.status === 'pending' && (
-                  <p className="text-xs text-yellow-600 mt-1 whitespace-nowrap hidden sm:block">To be added later</p>
+                  <p className="text-xs text-yellow-600 mt-1 whitespace-nowrap hidden sm:block">Legges til senere</p>
                 )}
               </div>
             </div>

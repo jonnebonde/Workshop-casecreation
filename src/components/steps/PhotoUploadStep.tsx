@@ -33,30 +33,30 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
   const requiredPhotoTypes = [
     { 
       type: 'overview' as const, 
-      title: 'Vehicle Overview', 
-      description: 'Full view of the vehicle showing the damaged area',
-      tips: 'Take photo from a distance showing the entire vehicle and damaged glass area',
+      title: 'Kjøretøy – oversiktsbilde', 
+      description: 'Helhetsbilde av kjøretøyet som viser skadeområdet',
+      tips: 'Ta bilde på avstand slik at hele kjøretøyet og skadeområdet vises',
       required: true
     },
     { 
       type: 'glass_closeup' as const, 
-      title: 'Glass Close-up', 
-      description: 'Close-up view of the damaged glass',
-      tips: 'Focus on the glass damage, ensure good lighting and clear visibility of cracks or chips',
+      title: 'Glass – nærbilde', 
+      description: 'Nærbilde av skadet glass',
+      tips: 'Fokuser på glasskaden, sørg for godt lys og tydelige sprekker/steinsprut',
       required: true
     },
     { 
       type: 'damage_closeup' as const, 
-      title: 'Damage Detail', 
-      description: 'Detailed view of the specific damage area',
-      tips: 'Get very close to show the exact nature and extent of the damage',
+      title: 'Skade – detalj', 
+      description: 'Detaljbilde av selve skaden',
+      tips: 'Gå tett på for å vise type og omfang av skaden',
       required: true
     },
     { 
       type: 'extra_documentation' as const, 
-      title: 'Additional Documentation', 
-      description: 'Any additional photos or documentation',
-      tips: 'Include any other relevant photos, documents, or evidence related to the damage',
+      title: 'Ekstra dokumentasjon', 
+      description: 'Andre relevante bilder eller dokumentasjon',
+      tips: 'Ta med andre relevante bilder/dokumenter som underbygger skaden',
       required: false
     }
   ];
@@ -99,9 +99,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
         setSkipPhotos(false);
         setSkipReason('');
         setUploadErrors({
-          'overview': 'File size too large (12.5MB). Maximum size is 10MB.',
-          'glass_closeup': 'Invalid file format. Please upload JPG, PNG, or WebP files only.',
-          'damage_closeup': 'Upload failed for this photo. Please try again.'
+          'overview': 'Filen er for stor (12.5MB). Maksgrense er 10MB.',
+          'glass_closeup': 'Ugyldig filformat. Last opp JPG, PNG eller WebP.',
+          'damage_closeup': 'Opplasting feilet for dette bildet. Prøv igjen.'
         });
         onPhotosUploaded([], false, false, '');
         break;
@@ -116,8 +116,8 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       case 'skippedPhotos':
         setPhotos([]);
         setSkipPhotos(true);
-        setSkipReason('Customer declined photo documentation due to privacy concerns');
-        onPhotosUploaded([], true, true, 'Customer declined photo documentation due to privacy concerns');
+        setSkipReason('Kunden avslo fotodokumentasjon av personvernhensyn');
+        onPhotosUploaded([], true, true, 'Kunden avslo fotodokumentasjon av personvernhensyn');
         break;
         
       default:
@@ -130,11 +130,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     
     if (!allowedTypes.includes(file.type)) {
-      return `Invalid file format for ${file.name}. Please upload JPG, PNG, or WebP files only.`;
+      return `Ugyldig filformat for ${file.name}. Last opp kun JPG, PNG eller WebP.`;
     }
     
     if (file.size > maxSize) {
-      return `File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum size is 10MB.`;
+      return `Filen ${file.name} er for stor (${(file.size / 1024 / 1024).toFixed(1)}MB). Maksimumsstørrelse er 10MB.`;
     }
     
     return null;
@@ -171,7 +171,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       };
       
       setPhotos(prev => {
-        // Remove any existing photo of this type and add the new one
+        // Fjern any existing photo of this type and add the new one
         const filtered = prev.filter(photo => photo.type !== photoType);
         const updated = [...filtered, newPhoto];
         onPhotosUploaded(updated, checkPhotosCompletion(updated), skipPhotos, skipReason);
@@ -330,7 +330,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
   const validateSkipReason = (): boolean => {
     if (skipPhotos && skipReason.trim() === '') {
-      setSkipReasonError('Please provide a reason for skipping photos');
+      setSkipReasonError('Vennligst oppgi en begrunnelse for å hoppe over bilder');
       return false;
     }
     return true;
@@ -338,7 +338,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
   const getCompletionStatus = () => {
     if (skipPhotos) {
-      return skipReason.trim() !== '' ? 'Skipped' : '0/4';
+      return skipReason.trim() !== '' ? 'Hoppet over' : '0/4';
     }
     const requiredTypes = requiredPhotoTypes.filter(req => req.required);
     const completed = requiredTypes.filter(req => getPhotosByType(req.type).length > 0).length;
@@ -364,9 +364,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     <div className="bg-white rounded-lg shadow-sm border p-6">
       <div className="flex items-center mb-6">
         <Camera className="w-6 h-6 text-blue-600 mr-3" />
-        <h2 className="text-xl font-semibold text-gray-900">Photo Documentation</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Fotodokumentasjon</h2>
         <div className="ml-auto flex items-center space-x-2">
-          <span className="text-sm text-gray-600">Progress: {getCompletionStatus()}</span>
+          <span className="text-sm text-gray-600">Fremdrift: {getCompletionStatus()}</span>
           {isStepComplete() && <Check className="w-5 h-5 text-green-500" />}
         </div>
         <button
@@ -378,7 +378,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
           }`}
         >
           <Settings className="w-4 h-4 inline mr-1" />
-          Developer Mode
+          Utviklermodus
         </button>
       </div>
 
@@ -387,10 +387,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
         <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center mb-3">
             <Settings className="w-4 h-4 text-orange-600 mr-2" />
-            <h3 className="font-medium text-orange-800">Developer Testing Tool</h3>
+            <h3 className="font-medium text-orange-800">Testverktøy for utvikler</h3>
           </div>
           <p className="text-sm text-orange-700 mb-4">
-            Select a scenario to instantly test different photo upload outcomes:
+            Velg et scenario for å teste ulike utfall for bildeopplasting:
           </p>
           
           <div className="flex flex-wrap gap-2">
@@ -402,7 +402,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              All Photos Uploaded
+              Alle bilder lastet opp
             </button>
             <button
               onClick={() => setScenario('uploadFailed')}
@@ -412,7 +412,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Upload Failed
+              Opplasting feilet
             </button>
             <button
               onClick={() => setScenario('noPhotos')}
@@ -422,7 +422,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              No Photos
+              Ingen bilder
             </button>
             <button
               onClick={() => setScenario('skippedPhotos')}
@@ -432,19 +432,19 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Skipped Photos
+              Bilder hoppet over
             </button>
           </div>
           
           {activeScenario && (
             <div className="mt-3 p-3 bg-white rounded border border-orange-200">
               <p className="text-sm text-orange-700">
-                <strong>Active Scenario:</strong> {
-                  activeScenario === 'allPhotosUploaded' ? 'All Photos Uploaded - Shows completed photo documentation with all required photos' :
-                  activeScenario === 'uploadFailed' ? 'Upload Failed - Shows file validation errors for multiple photo types' :
-                  activeScenario === 'noPhotos' ? 'No Photos - Shows initial state with empty photo sections' :
-                  activeScenario === 'skippedPhotos' ? 'Skipped Photos - Shows photos skipped with reason provided' :
-                  'Unknown scenario'
+                <strong>Aktivt scenario:</strong> {
+                  activeScenario === 'allPhotosUploaded' ? 'Alle bilder lastet opp - viser komplett fotodokumentasjon' :
+                  activeScenario === 'uploadFailed' ? 'Opplasting feilet - viser filvalideringsfeil for flere bildetyper' :
+                  activeScenario === 'noPhotos' ? 'Ingen bilder - starttilstand uten opplastinger' :
+                  activeScenario === 'skippedPhotos' ? 'Bilder hoppet over - viser begrunnelse' :
+                  'Ukjent scenario'
                 }
               </p>
             </div>
@@ -457,11 +457,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
         <div className="flex items-start">
           <Info className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
           <div>
-            <h4 className="font-medium text-blue-800 mb-2">Photo Requirements</h4>
+            <h4 className="font-medium text-blue-800 mb-2">Krav til bilder</h4>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Take clear, well-lit photos of all required areas</li>
-              <li>• Ensure damage is clearly visible in close-up shots</li>
-              <li>• Include overview shots showing vehicle context</li>
+              <li>- Ta klare, godt belyste bilder av alle påkrevde områder</li>
+              <li>- Sørg for at skaden er tydelig synlig på nærbilder</li>
+              <li>- Ta også oversiktsbilder som viser hele kjøretøyet</li>
             </ul>
           </div>
         </div>
@@ -480,24 +480,24 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
             />
             <div className="ml-3 flex-1">
               <label htmlFor="skip-photos" className="text-sm font-medium text-gray-700">
-                No photo documentation is needed for this case
+                Fotodokumentasjon er ikke nødvendig i denne saken
               </label>
               <p className="text-xs text-gray-500 mt-1">
-                Check this if photos are not required for this specific case
+                Kryss av hvis bilder ikke kreves for denne saken
               </p>
             </div>
           </div>
-          
+            
           {skipPhotos && (
             <div className="mt-4 ml-7">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Reason for skipping photos <span className="text-red-500">*</span>
+                Begrunnelse for å hoppe over bilder <span className="text-red-500">*</span>
               </label>
               <textarea
                 value={skipReason}
                 onChange={(e) => handleSkipReasonChange(e.target.value)}
                 onBlur={validateSkipReason}
-                placeholder="Please explain why photos are being skipped for this case..."
+                placeholder="Forklar hvorfor bilder hoppes over i denne saken..."
                 rows={3}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
                   skipReasonError ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -509,7 +509,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
               {skipReason.trim() && !skipReasonError && (
                 <div className="mt-2 flex items-center text-green-600 text-sm">
                   <Check className="w-4 h-4 mr-1" />
-                  Reason provided
+                  Begrunnelse lagt inn
                 </div>
               )}
             </div>
@@ -535,7 +535,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-gray-900">
                       {photoType.title}
-                      {!photoType.required && <span className="text-sm text-gray-500 ml-2">(Optional)</span>}
+                      {!photoType.required && <span className="text-sm text-gray-500 ml-2">(Valgfritt)</span>}
                     </h3>
                     <p className="text-sm text-gray-600">{photoType.description}</p>
                   </div>
@@ -561,7 +561,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                             onClick={() => clearUploadError(photoType.type)}
                             className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
                           >
-                            Try Again
+                            Prøv igjen
                           </button>
                           <button
                             onClick={() => {
@@ -570,7 +570,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                             }}
                             className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
                           >
-                            Choose Another File
+                            Velg en annen fil
                           </button>
                         </div>
                       </div>
@@ -585,7 +585,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                     {hasPhotos && (
                       <div className="space-y-3">
                         <h4 className="text-sm font-medium text-gray-700">
-                          Uploaded Photos ({existingPhotos.length})
+                          Opplastede bilder ({existingPhotos.length})
                         </h4>
                         {existingPhotos.map((photo) => (
                           <div key={photo.id} className="bg-green-50 border border-green-200 rounded-lg p-3">
@@ -606,7 +606,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                               <button
                                 onClick={() => removePhoto(photo.id)}
                                 className="text-red-500 hover:text-red-700 transition-colors p-1"
-                                title="Remove"
+                                title="Fjern"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -627,10 +627,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       <div className="text-center">
                         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                         <h4 className="text-sm font-medium text-gray-900 mb-1">
-                          {hasPhotos ? 'Upload Additional Photos' : `Upload ${photoType.title}`}
+                          {hasPhotos ? 'Last opp flere bilder' : `Last opp ${photoType.title}`}
                         </h4>
                         <p className="text-xs text-gray-500 mb-3">
-                          Drag and drop your files here, or click to select
+                          Dra og slipp filene dine her, eller klikk for å velge
                         </p>
                         
                         <input
@@ -651,7 +651,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          {hasPhotos ? 'Add More' : 'Choose Files'}
+                          {hasPhotos ? 'Last opp flere' : 'Velg filer'}
                         </label>
                         
                       
@@ -678,7 +678,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                             <Check className="w-4 h-4 text-green-600 mr-2" />
                             <div>
                               <p className="text-sm font-medium text-green-800">
-                                Photo Uploaded
+                                Bilde lastet opp
                               </p>
                             
                             </div>
@@ -688,7 +688,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                             className="flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
-                            Remove
+                            Fjern
                           </button>
                         </div>
                       </div>
@@ -713,7 +713,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          Replace Photo
+                          Bytt bilde
                         </label>
                       </div>
                     </div>
@@ -740,10 +740,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       <div className="text-center">
                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                         <h4 className="text-lg font-medium text-gray-900 mb-2">
-                          Upload {photoType.title}
+                          Last opp {photoType.title}
                         </h4>
                         <p className="text-sm text-gray-500 mb-4">
-                          Drag and drop your file here, or click to select
+                          Dra og slipp filen her, eller klikk for å velge
                         </p>
                         
                         <input
@@ -764,7 +764,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                           className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          Choose File
+                          Velg fil
                         </label>
                         
                      
@@ -786,9 +786,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
             <div className="flex items-start">
               <AlertCircle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
               <div>
-                <h4 className="font-medium text-yellow-800 mb-2">Missing Required Photos</h4>
+                <h4 className="font-medium text-yellow-800 mb-2">Mangler påkrevde bilder</h4>
                 <p className="text-sm text-yellow-700 mb-3">
-                  Please upload all required photos to complete this step
+                  Last opp alle påkrevde bilder for å fullføre dette steget
                 </p>
                 <ul className="text-sm text-yellow-700 space-y-1">
                   {requiredPhotoTypes
@@ -811,9 +811,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
             <div className="flex items-center">
               <Check className="w-5 h-5 text-green-600 mr-3" />
               <div>
-                <h4 className="font-medium text-green-800">All Photos Uploaded</h4>
+                <h4 className="font-medium text-green-800">Alle bilder lastet opp</h4>
                 <p className="text-sm text-green-700">
-                  All required photos have been successfully uploaded
+                  Alle påkrevde bilder er lastet opp
                 </p>
               </div>
             </div>
@@ -826,9 +826,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
             <div className="flex items-center">
               <Check className="w-5 h-5 text-green-600 mr-3" />
               <div>
-                <h4 className="font-medium text-green-800">Photos Skipped</h4>
+                <h4 className="font-medium text-green-800">Bilder hoppet over</h4>
                 <p className="text-sm text-green-700">
-                  Photos have been skipped for this case. Reason: {skipReason}
+                  Bilder er hoppet over i denne saken. Begrunnelse: {skipReason}
                 </p>
               </div>
             </div>

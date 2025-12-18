@@ -50,27 +50,27 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
   const staticStepConfigs = [
     {
       id: 'vrn-lookup',
-      title: 'VRN Lookup',
+      title: 'VRN-oppslag',
       required: true
     },
     {
       id: 'claim-form',
-      title: 'Claim Form',
+      title: 'Skademelding',
       required: true
     },
     {
       id: 'parts-labor',
-      title: 'Parts & Labor',
+      title: 'Deler og arbeid',
       required: true
     },
     {
       id: 'photos',
-      title: 'Photos',
+      title: 'Bilder',
       required: false
     },
     {
       id: 'invoice',
-      title: 'Invoice',
+      title: 'Faktura',
       required: true
     }
   ];
@@ -303,22 +303,22 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
     const getSubmissionTitle = () => {
       switch (submissionOutcome) {
         case 'drafted':
-          return 'Case Saved as Draft';
+          return 'Sak lagret som kladd';
         case 'stopped':
-          return 'Process Stopped';
+          return 'Prosess stoppet';
         default:
-          return 'Case Submitted Successfully';
+          return 'Sak sendt inn';
       }
     };
 
     const getSubmissionMessage = () => {
       switch (submissionOutcome) {
         case 'drafted':
-          return 'Your case has been saved as a draft. You can continue working on it later or submit it when ready.';
+          return 'Saken er lagret som kladd. Du kan fortsette senere eller sende inn når den er klar.';
         case 'stopped':
-          return 'The case process has been stopped as requested. The coverage check information has been recorded.';
+          return 'Saksprosessen er stoppet som ønsket. Informasjon om dekning er lagret.';
         default:
-          return 'Your case has been submitted and will be processed according to the approval status.';
+          return 'Saken er sendt inn og behandles videre etter vurdering.';
       }
     };
 
@@ -345,51 +345,51 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
           </p>
           {submissionOutcome === 'submitted' && (
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <div className="text-sm text-gray-600">
-              <div className="flex justify-between items-center mb-2">
-                <span>VRN:</span>
-                <span className="font-medium">{caseData.vrn}</span>
-              </div>
-              <div className="flex justify-between items-center mb-2">
-                <span>Status:</span>
-                <span className={`font-medium ${
-                  caseData.preCheckResult === 'auto_approved' ? 'text-green-600' : 'text-yellow-600'
-                }`}>
-                  {caseData.preCheckResult === 'auto_approved' ? 'Auto-Approved' : 'Manual Review'}
-                </span>
-              </div>
-              {caseData.customerAcceptedNoCoverage && (
+              <div className="text-sm text-gray-600">
                 <div className="flex justify-between items-center mb-2">
-                  <span>Payment:</span>
-                  <span className="font-medium text-red-600">Customer Paid</span>
+                  <span>Registreringsnummer:</span>
+                  <span className="font-medium">{caseData.vrn}</span>
                 </div>
-              )}
-              {caseData.calibrationNeeded && (
                 <div className="flex justify-between items-center mb-2">
-                  <span>Calibration:</span>
-                  <span className="font-medium text-blue-600">Required</span>
+                  <span>Status:</span>
+                  <span className={`font-medium ${
+                    caseData.preCheckResult === 'auto_approved' ? 'text-green-600' : 'text-yellow-600'
+                  }`}>
+                  {caseData.preCheckResult === 'auto_approved' ? 'Auto-godkjent' : 'Manuell vurdering'}
+                  </span>
                 </div>
-              )}
-              {caseData.skippedItems.length > 0 && (
-                <div className="flex justify-between items-center">
-                  <span>Pending Items:</span>
-                  <span className="font-medium text-yellow-600">{caseData.skippedItems.length}</span>
-                </div>
-              )}
-            </div>
+                {caseData.customerAcceptedNoCoverage && (
+                  <div className="flex justify-between items-center mb-2">
+                    <span>Betaling:</span>
+                    <span className="font-medium text-red-600">Kunde betaler</span>
+                  </div>
+                )}
+                {caseData.calibrationNeeded && (
+                  <div className="flex justify-between items-center mb-2">
+                    <span>Kalibrering:</span>
+                    <span className="font-medium text-blue-600">Påkrevd</span>
+                  </div>
+                )}
+                {caseData.skippedItems.length > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span>Utestående punkter:</span>
+                    <span className="font-medium text-yellow-600">{caseData.skippedItems.length}</span>
+                  </div>
+                )}
+              </div>
           </div>
           )}
           <button
             onClick={() => window.location.reload()}
             className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Create New Case
+            Opprett ny sak
           </button>
           <button
             onClick={() => window.location.href = '/dashboard'}
             className="w-full px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors mt-3"
           >
-            Go to Dashboard
+            Gå til oversikt
           </button>
         </div>
       </div>
@@ -403,7 +403,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <ClipboardList className="w-8 h-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">Workshop Case Creation</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Verksted sakshåndtering</h1>
             </div>
           </div>
         </div>
