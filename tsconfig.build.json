@@ -5,7 +5,9 @@
     "emitDeclarationOnly": true,
     "declarationMap": true,
     "noEmit": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": [
     "src"

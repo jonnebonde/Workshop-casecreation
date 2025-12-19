@@ -15,8 +15,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
   initialPhotosSkipped = false, 
   initialPhotosSkippedReason = '' 
 }) => {
+  type PhotoType = NonNullable<Photo['type']>;
+
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
-  const [uploadErrors, setUploadErrors] = useState<{[key: string]: string}>({});
+  const [uploadErrors, setUploadErrors] = useState<Partial<Record<PhotoType, string>>>({});
   const [skipPhotos, setSkipPhotos] = useState<boolean>(initialPhotosSkipped);
   const [skipReason, setSkipReason] = useState<string>(initialPhotosSkippedReason);
   const [skipReasonError, setSkipReasonError] = useState<string>('');
@@ -30,30 +32,30 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     damage_closeup: 'https://i.imgur.com/6aHVpSH.jpg'
   };
 
-  const requiredPhotoTypes = [
+  const requiredPhotoTypes: Array<{ type: PhotoType; title: string; description: string; tips: string; required: boolean }> = [
     { 
-      type: 'overview' as const, 
+      type: 'overview', 
       title: 'Vehicle Overview', 
       description: 'Full view of the vehicle showing the damaged area',
       tips: 'Take photo from a distance showing the entire vehicle and damaged glass area',
       required: true
     },
     { 
-      type: 'glass_closeup' as const, 
+      type: 'glass_closeup', 
       title: 'Glass Close-up', 
       description: 'Close-up view of the damaged glass',
       tips: 'Focus on the glass damage, ensure good lighting and clear visibility of cracks or chips',
       required: true
     },
     { 
-      type: 'damage_closeup' as const, 
+      type: 'damage_closeup', 
       title: 'Damage Detail', 
       description: 'Detailed view of the specific damage area',
       tips: 'Get very close to show the exact nature and extent of the damage',
       required: true
     },
     { 
-      type: 'extra_documentation' as const, 
+      type: 'extra_documentation', 
       title: 'Additional Documentation', 
       description: 'Any additional photos or documentation',
       tips: 'Include any other relevant photos, documents, or evidence related to the damage',
@@ -140,7 +142,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     return null;
   };
 
-  const handleFileUpload = (file: File, photoType: Photo['type']) => {
+  const handleFileUpload = (file: File, photoType: PhotoType) => {
     if (!file || !photoType) return;
 
     // Skip processing if in developer mode with active scenario
@@ -181,7 +183,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     reader.readAsDataURL(file);
   };
 
-  const handleMultipleFileUpload = (files: FileList, photoType: Photo['type']) => {
+  const handleMultipleFileUpload = (files: FileList, photoType: PhotoType) => {
     if (!files || files.length === 0 || !photoType) return;
 
     // Skip processing if in developer mode with active scenario
@@ -254,19 +256,20 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     
     // Clear any error for this photo type if no photos of this type remain
     const photoToRemove = photos.find(p => p.id === photoId);
-    if (photoToRemove) {
-      const remainingPhotosOfType = photos.filter(p => p.type === photoToRemove.type && p.id !== photoId);
+    if (photoToRemove && photoToRemove.type) {
+      const photoType = photoToRemove.type as PhotoType;
+      const remainingPhotosOfType = photos.filter(p => p.type === photoType && p.id !== photoId);
       if (remainingPhotosOfType.length === 0) {
         setUploadErrors(prev => {
           const newErrors = { ...prev };
-          delete newErrors[photoToRemove.type];
+          delete newErrors[photoType];
           return newErrors;
         });
       }
     }
   };
 
-  const clearUploadError = (photoType: Photo['type']) => {
+  const clearUploadError = (photoType: PhotoType) => {
     setUploadErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[photoType];
@@ -274,7 +277,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     });
   };
 
-  const triggerFileInput = (photoType: Photo['type']) => {
+  const triggerFileInput = (photoType: PhotoType) => {
     const inputId = `photo-upload-${photoType}`;
     const inputElement = document.getElementById(inputId) as HTMLInputElement;
     if (inputElement) {
@@ -282,7 +285,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     }
   };
 
-  const getPhotosByType = (type: Photo['type']) => {
+  const getPhotosByType = (type: PhotoType) => {
     return photos.filter(photo => photo.type === type);
   };
 
@@ -345,12 +348,12 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     return `${completed}/${requiredTypes.length}`;
   };
 
-  const handleDrag = (e: React.DragEvent, photoType: Photo['type']) => {
+  const handleDrag = (e: React.DragEvent, photoType: PhotoType) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e: React.DragEvent, photoType: Photo['type']) => {
+  const handleDrop = (e: React.DragEvent, photoType: PhotoType) => {
     e.preventDefault();
     e.stopPropagation();
     

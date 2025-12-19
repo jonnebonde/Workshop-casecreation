@@ -10,6 +10,7 @@ interface StepNavigationProps {
   onNext: () => void;
   onSaveDraft?: () => void;
   onStopProcess?: () => void;
+  onSkip?: () => void;
   isSavingDraft?: boolean;
   canProceed: boolean;
   isLastStep: boolean;
@@ -23,6 +24,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
   onNext,
   onSaveDraft,
   onStopProcess,
+  onSkip,
   isSavingDraft,
   canProceed,
   isLastStep,
@@ -76,6 +78,15 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
                 Save as Draft
               </>
             )}
+          </button>
+        )}
+        
+        {onSkip && (
+          <button
+            onClick={onSkip}
+            className="flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-medium"
+          >
+            Skip Step
           </button>
         )}
         

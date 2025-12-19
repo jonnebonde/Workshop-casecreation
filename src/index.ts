@@ -9,7 +9,6 @@ export { default as ClaimFormStep } from './components/steps/ClaimFormStep';
 export { default as PhotoUploadStep } from './components/steps/PhotoUploadStep';
 export { default as PartsLaborStep } from './components/steps/PartsLaborStep';
 export { default as InvoiceStep } from './components/steps/InvoiceStep';
-export { default as ConfirmationStep } from './components/steps/ConfirmationStep';
 
 // Export hooks and utilities
 export { useCaseData } from './hooks/useCaseData';

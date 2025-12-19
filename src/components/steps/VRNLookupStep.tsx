@@ -8,8 +8,8 @@ interface VRNLookupStepProps {
     damageDate: string,
     insuranceCompany: string,
     glassType: string,
-    vehicle: Vehicle, 
-    owner: Owner, 
+    vehicle: Vehicle | null, 
+    owner: Owner | null, 
     existingCase: ExistingCase | null, 
     coverageCheck: CoverageCheck | null,
     priceEstimate: PriceEstimate | null,
@@ -308,12 +308,12 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
     };
 
     // Simulate price estimate based on glass type
-    const basePrices = {
-      'Windscreen': { min: 280, max: 450, estimated: 365 },
-      'Side Window': { min: 120, max: 200, estimated: 160 },
-      'Rear Window': { min: 200, max: 350, estimated: 275 },
-      'Sunroof': { min: 400, max: 650, estimated: 525 }
-    };
+  const basePrices: Record<string, { minPrice: number; maxPrice: number; estimatedPrice: number }> = {
+    'Windscreen': { minPrice: 280, maxPrice: 450, estimatedPrice: 365 },
+    'Side Window': { minPrice: 120, maxPrice: 200, estimatedPrice: 160 },
+    'Rear Window': { minPrice: 200, maxPrice: 350, estimatedPrice: 275 },
+    'Sunroof': { minPrice: 400, maxPrice: 650, estimatedPrice: 525 }
+  };
     const priceData = basePrices[glassType as keyof typeof basePrices] || basePrices['Windscreen'];
     const mockPriceResult: PriceEstimate = {
       ...priceData,

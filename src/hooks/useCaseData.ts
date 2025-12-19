@@ -38,8 +38,8 @@ export const useCaseData = () => {
     damageDate: string,
     insuranceCompany: string,
     glassType: string,
-    vehicle: Vehicle, 
-    owner: Owner, 
+    vehicle: Vehicle | null, 
+    owner: Owner | null, 
     existingCase: ExistingCase | null, 
     coverageCheck: CoverageCheck | null,
     priceEstimate: PriceEstimate | null,
@@ -150,7 +150,7 @@ export const useCaseData = () => {
     }));
   };
 
-  const updateClaimFormActionTaken = (action: 'continued' | 'drafted' | 'stopped') => {
+  const updateClaimFormActionTaken = (action: 'continued' | 'drafted' | 'stopped' | 'submitted') => {
     setCaseData(prev => ({
       ...prev,
       claimFormActionTaken: action

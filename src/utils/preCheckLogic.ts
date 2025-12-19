@@ -7,15 +7,11 @@ const calculateItemTotal = (item: any) => {
 };
 
 const calculatePartsTotal = (caseData: CaseData): number => {
-  return caseData.repairItems
-    .filter(item => item.category === 'parts')
-    .reduce((sum, item) => sum + calculateItemTotal(item), 0);
+  return caseData.repairItems.reduce((sum, item) => sum + calculateItemTotal(item), 0);
 };
 
 const calculateLaborTotal = (caseData: CaseData): number => {
-  return caseData.repairItems
-    .filter(item => item.category === 'labor')
-    .reduce((sum, item) => sum + calculateItemTotal(item), 0);
+  return caseData.repairItems.reduce((sum, item) => sum + calculateItemTotal(item), 0);
 };
 
 export const calculateExpectedTotal = (caseData: CaseData): number => {
@@ -23,7 +19,7 @@ export const calculateExpectedTotal = (caseData: CaseData): number => {
 };
 
 export const getComparisonStatus = (ocrValue: number, expectedValue: number): boolean => {
-  const tolerance = 5; // £5 tolerance
+  const tolerance = 5;
   const difference = Math.abs(ocrValue - expectedValue);
   return difference <= tolerance;
 };

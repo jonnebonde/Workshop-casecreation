@@ -56,8 +56,7 @@ export interface Photo {
   preview: string;
 }
 
-export type RepairCategory = 'Part' | 'Labor';
-export type RepairCategory = 
+export type RepairCategory =
   | 'Glass'
   | 'Tilbehør'
   | 'Sensor / Sensorgel'
@@ -124,16 +123,16 @@ export interface CaseData {
   ocrInvoiceData: InvoiceOcrData | null;
   preCheckResult: 'auto_approved' | 'manual_review' | null;
   skippedItems: string[];
-  vrnConfirmed?: boolean;
-  partsLaborConfirmed?: boolean;
-  customerAcceptedNoCoverage?: boolean;
-  calibrationNeeded?: boolean;
-  calibrationSignature?: string;
-  calibrationDocument?: File | null;
-  photosSkipped?: boolean;
-  photosSkippedReason?: string;
-  jobPerformedDate?: string;
-  claimFormActionTaken?: 'continued' | 'drafted' | 'stopped';
+  vrnConfirmed: boolean;
+  partsLaborConfirmed: boolean;
+  customerAcceptedNoCoverage: boolean;
+  calibrationNeeded: boolean;
+  calibrationSignature: string;
+  calibrationDocument: File | null;
+  photosSkipped: boolean;
+  photosSkippedReason: string;
+  jobPerformedDate: string;
+  claimFormActionTaken?: 'continued' | 'drafted' | 'stopped' | 'submitted';
 }
 
 export interface AdditionalClaimInfo {

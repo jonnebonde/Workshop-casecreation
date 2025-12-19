@@ -1,4 +1,3 @@
-import React from 'react';
 import CaseCreationFeature from './CaseCreationFeature';
 
 function App() {

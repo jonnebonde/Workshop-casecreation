@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClipboardList, Check } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 import ProgressBar from './components/ProgressBar';
 import StepNavigation from './components/StepNavigation';
 import VRNLookupStep from './components/steps/VRNLookupStep';
@@ -107,18 +107,18 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
   const canProceedToNextStep = () => {
     switch (currentStep) {
       case 0:
-        return caseData.vehicle && caseData.owner && caseData.vrnConfirmed && 
+        return !!(caseData.vehicle && caseData.owner && caseData.vrnConfirmed && 
                caseData.coverageCheck && 
-               (caseData.coverageCheck.covered || caseData.coverageCheck.message.includes('manual review'));
+               (caseData.coverageCheck.covered || caseData.coverageCheck.message.includes('manual review')));
       case 1:
         return caseData.claimFormActionTaken === 'continued';
       case 2:
         const isCalibrationComplete = !caseData.calibrationNeeded || (caseData.calibrationNeeded && caseData.calibrationSignature);
-        return (caseData.repairItems.length > 0 && isCalibrationComplete) || caseData.skippedItems.includes('parts-labor');
+        return !!((caseData.repairItems.length > 0 && isCalibrationComplete) || caseData.skippedItems.includes('parts-labor'));
       case 3:
         return true;
       case 4:
-        return caseData.invoice || caseData.skippedItems.includes('invoice');
+        return !!(caseData.invoice || caseData.skippedItems.includes('invoice'));
       default:
         return false;
     }
@@ -259,18 +259,18 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
             customerDeductible={250}
             onRepairItemsUpdated={updateRepairItems}
             onCalibrationNeededUpdated={(calibrationNeeded) => 
-              updateCalibrationData(calibrationNeeded, caseData.calibrationSignature, caseData.calibrationDocument)
+              updateCalibrationData(calibrationNeeded, caseData.calibrationSignature ?? '', caseData.calibrationDocument ?? null)
             }
             onCalibrationSignatureUpdated={(calibrationSignature) => 
-              updateCalibrationData(caseData.calibrationNeeded, calibrationSignature, caseData.calibrationDocument)
+              updateCalibrationData(caseData.calibrationNeeded ?? false, calibrationSignature, caseData.calibrationDocument ?? null)
             }
             onCalibrationDocumentUpdated={(calibrationDocument) => 
-              updateCalibrationData(caseData.calibrationNeeded, caseData.calibrationSignature, calibrationDocument)
+              updateCalibrationData(caseData.calibrationNeeded ?? false, caseData.calibrationSignature ?? '', calibrationDocument)
             }
             initialRepairItems={caseData.repairItems}
-            initialCalibrationNeeded={caseData.calibrationNeeded}
-            initialCalibrationSignature={caseData.calibrationSignature}
-            initialCalibrationDocument={caseData.calibrationDocument}
+            initialCalibrationNeeded={caseData.calibrationNeeded ?? false}
+            initialCalibrationSignature={caseData.calibrationSignature ?? ''}
+            initialCalibrationDocument={caseData.calibrationDocument ?? null}
             initialJobPerformedDate={caseData.jobPerformedDate || ''}
             onJobPerformedDateUpdated={updateJobPerformedDate}
           />
@@ -430,6 +430,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
             isSavingDraft={isSavingDraft}
             onSkip={canShowSkip() ? handleSkip : undefined}
             canProceed={canProceedToNextStep()}
+            isLastStep={currentStep === steps.length - 1}
           />
         ) : null}
       </main>
