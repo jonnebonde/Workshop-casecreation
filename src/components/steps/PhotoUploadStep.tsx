@@ -1,6 +1,148 @@
 import React, { useState } from 'react';
-import { Camera, Upload, X, Check, AlertCircle, Info, Trash2, Settings } from 'lucide-react';
+import { Camera, Upload, X, Check, AlertCircle, Info, Trash2, Settings, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Photo } from '../../types/case';
+
+interface ImageExample {
+  title: string;
+  exampleImageUrl: string;
+  description: string;
+  tips: string[];
+}
+
+interface ImageExampleModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  examples: ImageExample[];
+}
+
+const ImageExampleModal: React.FC<ImageExampleModalProps> = ({
+  isOpen,
+  onClose,
+  examples
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (!isOpen) return null;
+
+  const currentExample = examples[currentIndex];
+  const totalExamples = examples.length;
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : totalExamples - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev < totalExamples - 1 ? prev + 1 : 0));
+  };
+
+  const handleClose = () => {
+    setCurrentIndex(0);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div
+          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+          onClick={handleClose}
+        />
+
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+        <div className="inline-block w-full max-w-3xl overflow-hidden text-left align-middle transition-all transform bg-white rounded-xl shadow-2xl">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100">
+            <div className="flex-1">
+              <h3 className="text-xl font-semibold text-gray-900">
+                {currentExample.title} - Example
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                {currentIndex + 1} of {totalExamples}
+              </p>
+            </div>
+            <button
+              onClick={handleClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-white"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="px-6 py-6">
+            <p className="text-sm text-gray-600 mb-4">
+              {currentExample.description}
+            </p>
+
+            <div className="mb-6 rounded-lg overflow-hidden border-2 border-gray-200 shadow-md relative">
+              <img
+                src={currentExample.exampleImageUrl}
+                alt={`${currentExample.title} Example`}
+                className="w-full h-auto object-contain bg-gray-50"
+              />
+
+              {totalExamples > 1 && (
+                <>
+                  <button
+                    onClick={goToPrevious}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all"
+                    aria-label="Previous example"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all"
+                    aria-label="Next example"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            <div className="bg-blue-50 rounded-lg p-5 border border-blue-200">
+              <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                <CheckCircle className="h-5 w-5 text-blue-600 mr-2" />
+                Key Requirements
+              </h4>
+              <ul className="space-y-2">
+                {currentExample.tips.map((tip, index) => (
+                  <li key={index} className="flex items-start text-sm text-gray-700">
+                    <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                    <span>{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+            <div className="flex gap-2">
+              {examples.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentIndex
+                      ? 'bg-blue-600'
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  aria-label={`Go to example ${index + 1}`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={handleClose}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface PhotoUploadStepProps {
   onPhotosUploaded: (photos: Photo[], isComplete: boolean, photosSkipped?: boolean, photosSkippedReason?: string) => void;
@@ -24,27 +166,61 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
   const [skipReasonError, setSkipReasonError] = useState<string>('');
   const [isDeveloperMode, setIsDeveloperMode] = useState<boolean>(false);
   const [activeScenario, setActiveScenario] = useState<string>('');
+  const [isExamplesOpen, setIsExamplesOpen] = useState<boolean>(false);
 
   // Example images for each required photo type
   const placeholderImages = {
-    overview: 'https://i.imgur.com/DxEqaxl.jpg',
-    glass_closeup: 'https://i.imgur.com/7V69aYo.jpg',
-    damage_closeup: 'https://i.imgur.com/6aHVpSH.jpg'
+    overview: '',
+    glass_closeup: '',
+    damage_closeup: ''
   };
+
+  const imageExamples: ImageExample[] = [
+    {
+      title: 'Vehicle Overview',
+      exampleImageUrl: placeholderImages.overview,
+      description: 'Capture a full view of the vehicle that clearly shows the damaged glass area and the surrounding context.',
+      tips: [
+        'Stand back to include the whole vehicle and the damaged area in one shot',
+        'Ensure the vehicle is centered and well lit with minimal glare',
+        'Avoid cutting off corners or important parts of the vehicle'
+      ]
+    },
+    {
+      title: 'Glass Close-up',
+      exampleImageUrl: placeholderImages.glass_closeup,
+      description: 'Zoom in on the damaged glass so chips, cracks, or impacts are easily visible.',
+      tips: [
+        'Focus on the damaged section of the glass with steady hands',
+        'Take the photo straight-on to avoid reflections',
+        'Use good lighting so cracks and chips are clear'
+      ]
+    },
+    {
+      title: 'Damage Detail',
+      exampleImageUrl: placeholderImages.damage_closeup,
+      description: 'Provide a detailed view that highlights the exact nature and extent of the damage.',
+      tips: [
+        'Move in close while keeping the damage sharp and in focus',
+        'Show scale by including a small object or ruler if helpful',
+        'Capture multiple angles if needed to show depth or spread'
+      ]
+    }
+  ];
 
   const requiredPhotoTypes: Array<{ type: PhotoType; title: string; description: string; tips: string; required: boolean }> = [
     { 
       type: 'overview', 
       title: 'Vehicle Overview', 
       description: 'Full view of the vehicle showing the damaged area',
-      tips: 'Take photo from a distance showing the entire vehicle and damaged glass area',
+      tips: 'Focus on showing the entire vehicle and damaged glass area',
       required: true
     },
     { 
       type: 'glass_closeup', 
       title: 'Glass Close-up', 
       description: 'Close-up view of the damaged glass',
-      tips: 'Focus on the glass damage, ensure good lighting and clear visibility of cracks or chips',
+      tips: 'Focus on the glass damage with a clear visibility of cracks or chips',
       required: true
     },
     { 
@@ -58,7 +234,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       type: 'extra_documentation', 
       title: 'Additional Documentation', 
       description: 'Any additional photos or documentation',
-      tips: 'Include any other relevant photos, documents, or evidence related to the damage',
+      tips: 'Other relevant files related to the case',
       required: false
     }
   ];
@@ -457,16 +633,26 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
       {/* Instructions */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <div className="flex items-start">
-          <Info className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
-          <div>
-            <h4 className="font-medium text-blue-800 mb-2">Photo Requirements</h4>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Take clear, well-lit photos of all required areas</li>
-              <li>• Ensure damage is clearly visible in close-up shots</li>
-              <li>• Include overview shots showing vehicle context</li>
-            </ul>
+        <div className="flex items-start justify-between items-center gap-4">
+          <div className="flex">
+            <Info className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+            <div>
+              <h4 className="font-medium text-blue-800 mb-2">Photo Requirements</h4>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• Take clear, well-lit photos of all required areas</li>
+                <li>• Ensure damage is clearly visible in close-up shots</li>
+                <li>• Include overview shots showing vehicle context</li>
+              </ul>
+            </div>
           </div>
+          <button
+            onClick={() => setIsExamplesOpen(true)}
+            type="button"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            <CheckCircle className="w-4 h-4 mr-2" />
+            View photo examples
+          </button>
         </div>
       </div>
 
@@ -547,7 +733,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
                 {/* Tips */}
                 <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                  <p className="text-xs text-gray-600">
+                  <p className="text-sm text-gray-700">
                     <strong>Tips:</strong> {photoType.tips}
                   </p>
                 </div>
@@ -621,18 +807,18 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
                     {/* Upload more files */}
                     <div
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors"
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-20 hover:border-gray-400 transition-colors"
                       onDragEnter={(e) => handleDrag(e, photoType.type)}
                       onDragLeave={(e) => handleDrag(e, photoType.type)}
                       onDragOver={(e) => handleDrag(e, photoType.type)}
                       onDrop={(e) => handleDrop(e, photoType.type)}
                     >
                       <div className="text-center">
-                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                        <h4 className="text-sm font-medium text-gray-900 mb-1">
+                        <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <h4 className=" text-lg font-medium text-gray-900 mb-2">
                           {hasPhotos ? 'Upload Additional Photos' : `Upload ${photoType.title}`}
                         </h4>
-                        <p className="text-xs text-gray-500 mb-3">
+                        <p className="text-sm text-gray-500 mb-3">
                           Drag and drop your files here, or click to select
                         </p>
                         
@@ -651,7 +837,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         />
                         <label
                           htmlFor={`photo-upload-multiple-${photoType.type}`}
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                          className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
                           {hasPhotos ? 'Add More' : 'Choose Files'}
@@ -712,7 +898,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         />
                         <label
                           htmlFor={`photo-replace-${photoType.type}`}
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
                           Replace Photo
@@ -721,7 +907,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                     </div>
                   ) : (
                     <div
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-gray-400 transition-colors"
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-20 hover:border-gray-400 transition-colors  "
                       onDragEnter={(e) => handleDrag(e, photoType.type)}
                       onDragLeave={(e) => handleDrag(e, photoType.type)}
                       onDragOver={(e) => handleDrag(e, photoType.type)}
@@ -763,7 +949,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         />
                         <label
                           htmlFor={`photo-upload-${photoType.type}`}
-                          className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                          className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-800 cursor-pointer transition-colors"
                         >
                           <Upload className="w-4 h-4 mr-2" />
                           Choose File
@@ -837,6 +1023,11 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
           </div>
         )}
       </div>
+      <ImageExampleModal
+        isOpen={isExamplesOpen}
+        onClose={() => setIsExamplesOpen(false)}
+        examples={imageExamples}
+      />
     </div>
   );
 };

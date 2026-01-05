@@ -132,7 +132,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
                   <p className="text-xs text-red-500 mt-1 whitespace-nowrap hidden sm:block">Attention needed</p>
                 )}
                 {step.status === 'pending' && (
-                  <p className="text-xs text-yellow-600 mt-1 whitespace-nowrap hidden sm:block">To be added later</p>
+                  <p className="text-sm text-yellow-500 mt-1 whitespace-nowrap hidden sm:block"></p>
                 )}
               </div>
             </div>
