@@ -405,7 +405,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               onClick={() => setScenario('vrnNotFound')}
               className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
                 activeScenario === 'vrnNotFound'
-                  ? 'bg-red-100 text-red-800 border-red-300'
+                  ? 'text-red-800 border-red-500'
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -415,7 +415,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               onClick={() => setScenario('noCoverage')}
               className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
                 activeScenario === 'noCoverage'
-                  ? 'bg-orange-100 text-orange-800 border-orange-300'
+                  ? 'text-orange-800 border-orange-300'
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -425,7 +425,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               onClick={() => setScenario('existingCaseFound')}
               className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
                 activeScenario === 'existingCaseFound'
-                  ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                  ? 'bg-yellow-0 text-yellow-800 border-yellow-300'
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -477,8 +477,8 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   onChange={(e) => handleVrnChange(e.target.value)}
                   placeholder="Enter VRN (e.g., AB12 CDE)"
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${
-                    lookupError ? 'border-red-300 bg-red-50' : 
-                    hasValidData ? 'border-green-300 bg-green-50' : 
+                    lookupError ? 'border-red-300 ' : 
+                    hasValidData ? 'border-green-300 ' : 
                     'border-gray-300'
                   }`}
                   disabled={isLooking}
@@ -565,7 +565,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
 
           {/* Validation Messages */}
           {!isFormValid && (vrn.length > 0 || damageDate || insuranceCompany || glassType) && (
-              <div className="flex items-center text-sm text-red-600">
+              <div className="flex items-center text-sm text-red-500">
                 <X className="w-4 h-4 mr-2" />
               <span>Please fill in all required fields</span>
               </div>
@@ -574,7 +574,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
 
         {/* Lookup Error */}
         {lookupError && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className=" border border-red-500 rounded-lg p-4">
             <div className="flex items-start">
               <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
               <div>
@@ -659,19 +659,19 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
               {coverageCheck && (
                 <div className={`rounded-lg p-4 border ${
                   coverageCheck.covered 
-                    ? 'bg-green-50 border-green-200' 
+                    ? ' border-green-200' 
                     : coverageCheck.message.includes('manual review')
-                      ? 'bg-purple-50 border-purple-200'
-                      : 'bg-red-50 border-red-200'
+                      ? ' border-yellow-500'
+                      : ' border-red-200'
                 }`}>
                   <div className="flex items-center mb-3">
                     <Shield className={`w-5 h-5 mr-2 ${
                       coverageCheck.covered ? 'text-green-600' : 
-                      coverageCheck.message.includes('manual review') ? 'text-purple-600' : 'text-red-600'
+                      coverageCheck.message.includes('manual review') ? 'text-yellow-500' : 'text-red-600'
                     }`} />
                     <h3 className={`font-medium ${
                       coverageCheck.covered ? 'text-green-900' : 
-                      coverageCheck.message.includes('manual review') ? 'text-purple-900' : 'text-red-900'
+                      coverageCheck.message.includes('manual review') ? 'text-yellow-500' : 'text-red-900'
                     }`}>
                       Insurance Coverage
                     </h3>
@@ -700,7 +700,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                       </>
                     )}
                     <div className="pt-2 border-t border-gray-200">
-                      <p className={`text-xs ${
+                      <p className={`text-s ${
                         coverageCheck.covered ? 'text-green-700' : 
                         coverageCheck.message.includes('manual review') ? 'text-purple-700' : 'text-red-700'
                       }`}>
@@ -719,15 +719,15 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
 
         {/* Existing Case Warning */}
         {showExistingCase && existingCase && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className=" border border-yellow-500 rounded-lg p-4">
             <div className="flex items-start">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-yellow-500 mr-3 mt-0.5" />
               <div className="flex-1">
-                <h3 className="font-medium text-yellow-800 mb-2">Existing Case Found</h3>
-                <p className="text-sm text-yellow-700 mb-3">
+                <h3 className="font-medium text-yellow-500 mb-2">Existing Case Found</h3>
+                <p className="text-sm  mb-3">
                   <strong>Important:</strong> An open case already exists for this vehicle. You must choose how to proceed:
                 </p>
-                <div className="bg-white rounded-lg p-3 mb-4 border border-yellow-200">
+                <div className="bg-white rounded-lg p-3 mb-4 border border-yellow-500">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-gray-600">Case ID:</span>
@@ -748,17 +748,17 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                   </div>
                 </div>
                 
-                <div className="bg-yellow-100 rounded-lg p-3 mb-4">
-                  <h4 className="font-medium text-yellow-800 mb-2">Choose an option:</h4>
-                  <div className="text-sm text-yellow-700 space-y-2">
+                <div className=" rounded-lg p-3 mb-4">
+                  <h4 className="font-medium mb-2">Choose an option:</h4>
+                  <div className="text-sm space-y-2">
                     <div className="flex items-start">
-                      <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
                       <div>
                         <strong>Continue Existing Case:</strong> Add to or update the current case
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
                       <div>
                         <strong>Create New Case:</strong> Start a separate case for this vehicle
                       </div>
@@ -787,12 +787,12 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
 
         {/* Success Message */}
         {canShowSuccessMessage && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className=" border border-green-500 rounded-lg p-4">
             <div className="flex items-center">
-              <Check className="w-5 h-5 text-green-600 mr-3" />
+              <Check className="w-5 h-5 text-green-500 mr-3" />
               <div>
                 <h3 className="font-medium text-green-800">Ready to Continue</h3>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-green-800">
                   Vehicle and owner information verified. You can now proceed to the next step.
                 </p>
               </div>

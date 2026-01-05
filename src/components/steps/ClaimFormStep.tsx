@@ -535,19 +535,19 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
         <h3 className="font-medium text-blue-800 mb-3">Case Information</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-blue-600">VRN:</span>
+            <span className="text-gray-700">VRN:</span>
             <div className="font-medium text-blue-900">{vrn}</div>
           </div>
           <div>
-            <span className="text-blue-600">Damage Date:</span>
+            <span className="text-gray-700">Damage Date:</span>
             <div className="font-medium text-blue-900">{damageDate}</div>
           </div>
           <div>
-            <span className="text-blue-600">Insurance:</span>
+            <span className="text-gray-700">Insurance:</span>
             <div className="font-medium text-blue-900">{insuranceCompany}</div>
           </div>
           <div>
-            <span className="text-blue-600">Glass Type:</span>
+            <span className="text-gray-700">Glass Type:</span>
             <div className="font-medium text-blue-900">{glassType}</div>
           </div>
         </div>
@@ -559,7 +559,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
           <div className="flex items-center">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
             <div>
-              <h3 className="font-medium text-yellow-800 mb-1">No Existing Claim Form Found</h3>
+              <h3 className="font-medium mb-1">No Existing Claim Form Found</h3>
               <p className="text-sm text-blue-700">
                 No claim form exists for VRN {vrn}. Please choose how you would like to provide the claim information.
               </p>
@@ -571,7 +571,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
       {/* Existing claim form found */}
       {hasSearched && claimForm && claimForm.exists && (
         <>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+          <div className=" border border-green-200 rounded-lg p-4 mb-6">
             <div className="flex items-start">
               <Check className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
               <div className="flex-1">
