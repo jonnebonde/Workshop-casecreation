@@ -43,7 +43,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
         <button
           onClick={onPrevious}
           disabled={currentStep === 0}
-          className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           <span className="hidden sm:inline">Previous</span>
@@ -54,7 +54,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
         {onStopProcess && (
           <button
             onClick={onStopProcess}
-            className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+            className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
           >
             <StopCircle className="w-4 h-4 mr-2" />
             Stop Process
@@ -84,7 +84,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
         {onSkip && (
           <button
             onClick={onSkip}
-            className="flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-medium"
+            className="flex items-center px-4 py-2 border border-yellow-500 text-yellow-500 rounded-lg hover:text-white hover:bg-yellow-500 transition-colors text-sm font-medium"
           >
             Skip Step
           </button>

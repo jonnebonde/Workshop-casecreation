@@ -315,16 +315,16 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
           <div className="space-y-6">
             {/* Upload Error - Show first if present */}
             {uploadError ? (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className=" border border-red-500 rounded-lg p-4">
                 <div className="flex items-start">
                   <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
                   <div className="flex-1">
-                    <h3 className="font-medium text-red-800">❌ Invoice Upload Failed</h3>
+                    <h3 className="font-medium text-red-500"> Invoice Upload Failed</h3>
                     <p className="text-sm text-red-700 mb-4">{uploadError}</p>
                     <div className="flex space-x-3">
                       <button
                         onClick={() => setUploadError(null)}
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-900 transition-colors"
                       >
                         Try Again
                       </button>
@@ -349,12 +349,12 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
               </div>
             ) : (
               /* Success Message - Only show when no upload error */
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className=" border border-green-500 rounded-lg p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start">
-                    <FileText className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
+                    <FileText className="w-5 h-5 text-green-800 mr-3 mt-0.5" />
                     <div>
-                      <h3 className="font-medium text-green-800">✅ Invoice Uploaded Successfully</h3>
+                      <h3 className="font-medium text-green-800">Invoice Uploaded Successfully</h3>
                       <div className="mt-2 space-y-1 text-sm text-green-700">
                         <p><strong>File:</strong> {invoice.name}</p>
                         <p><strong>Size:</strong> {(invoice.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -379,13 +379,13 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                     className="hidden"
                     id="invoice-replace"
                   />
-                  <label
+                  <button
                     htmlFor="invoice-replace"
-                    className="inline-flex items-center px-4 py-2 bg-white text-green-700 border border-green-300 rounded-lg hover:bg-green-50 cursor-pointer transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-colors pointer"
                   >
                     <Upload className="w-4 h-4 mr-2" />
                     Replace Invoice
-                  </label>
+                  </button>
                 </div>
               </div>
             )}

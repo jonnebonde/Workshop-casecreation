@@ -554,12 +554,12 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
                 {/* Error Display */}
                 {hasError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                  <div className="b border border-red-500 rounded-lg p-3 mb-4">
                     <div className="flex items-start">
-                      <X className="w-4 h-4 text-red-600 mr-2 mt-0.5" />
+                      <X className="w-5 h-5 text-red-600 mr-2 mt-0.5" />
                       <div className="flex-1">
                         <p className="text-sm text-red-700 mb-3">{hasError}</p>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-8">
                           <button
                             onClick={() => clearUploadError(photoType.type)}
                             className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
@@ -675,10 +675,10 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       </div>
                       
                       {/* File Info */}
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className=" border border-green-500 rounded-lg p-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <Check className="w-4 h-4 text-green-600 mr-2" />
+                            <Check className="w-4 h-4 text-green-700 mr-2" />
                             <div>
                               <p className="text-sm font-medium text-green-800">
                                 Photo Uploaded
@@ -688,10 +688,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                           </div>
                           <button
                             onClick={() => removePhoto(existingPhotos[0].id)}
-                            className="flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                            className="flex items-center px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-900 transition-colors"
                           >
-                            <Trash2 className="w-3 h-3 mr-1" />
-                            Remove
+                            <Trash2 className="w-5 h-5 " /> 
                           </button>
                         </div>
                       </div>
@@ -785,15 +784,15 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       <div className="mt-6 space-y-4">
         {/* Missing Photos Warning */}
         {!skipPhotos && !isStepComplete() && photos.length > 0 && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className=" border border-yellow-500 rounded-lg p-4">
             <div className="flex items-start">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-yellow-500 mr-3 mt-0.5" />
               <div>
-                <h4 className="font-medium text-yellow-800 mb-2">Missing Required Photos</h4>
-                <p className="text-sm text-yellow-700 mb-3">
+                <h4 className="font-medium text-yellow-500 mb-2">Missing Required Photos</h4>
+                <p className="text-sm text-yellow-500 mb-3">
                   Please upload all required photos to complete this step
                 </p>
-                <ul className="text-sm text-yellow-700 space-y-1">
+                <ul className="text-sm text-yellow-500 space-y-1">
                   {requiredPhotoTypes
                     .filter(req => req.required && getPhotosByType(req.type).length === 0)
                     .map((req) => (
@@ -810,7 +809,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
         {/* Success Message */}
         {!skipPhotos && isStepComplete() && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className=" border border-green-500 rounded-lg p-4">
             <div className="flex items-center">
               <Check className="w-5 h-5 text-green-600 mr-3" />
               <div>

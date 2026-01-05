@@ -336,7 +336,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
     return (
       <div className={`min-h-screen bg-gray-50 flex items-center justify-center p-4 ${className}`}>
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className={`w-16 h-16 ${submissionOutcome === 'drafted' ? 'bg-yellow-100' : submissionOutcome === 'stopped' ? 'bg-red-100' : 'bg-green-100'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+          <div className={`w-16 h-16 ${submissionOutcome === 'drafted' ? 'bg-yellow-0' : submissionOutcome === 'stopped' ? 'bg-red-0' : 'bg-green-0'} rounded-full flex items-center justify-center mx-auto mb-4`}>
             <ClipboardList className={`w-8 h-8 ${getSubmissionIcon()}`} />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{getSubmissionTitle()}</h2>
@@ -353,27 +353,17 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
               <div className="flex justify-between items-center mb-2">
                 <span>Status:</span>
                 <span className={`font-medium ${
-                  caseData.preCheckResult === 'auto_approved' ? 'text-green-600' : 'text-yellow-600'
+                  caseData.preCheckResult === 'auto_approved' ? 'text-green-500' : 'text-yellow-500'
                 }`}>
                   {caseData.preCheckResult === 'auto_approved' ? 'Auto-Approved' : 'Manual Review'}
                 </span>
               </div>
-              {caseData.customerAcceptedNoCoverage && (
-                <div className="flex justify-between items-center mb-2">
-                  <span>Payment:</span>
-                  <span className="font-medium text-red-600">Customer Paid</span>
-                </div>
-              )}
-              {caseData.calibrationNeeded && (
-                <div className="flex justify-between items-center mb-2">
-                  <span>Calibration:</span>
-                  <span className="font-medium text-blue-600">Required</span>
-                </div>
-              )}
+            
+             
               {caseData.skippedItems.length > 0 && (
                 <div className="flex justify-between items-center">
                   <span>Pending Items:</span>
-                  <span className="font-medium text-yellow-600">{caseData.skippedItems.length}</span>
+                  <span className="font-medium">{caseData.skippedItems.length}</span>
                 </div>
               )}
             </div>
@@ -389,7 +379,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
             onClick={() => window.location.href = '/dashboard'}
             className="w-full px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors mt-3"
           >
-            Go to Dashboard
+            Back to Dashboard
           </button>
         </div>
       </div>

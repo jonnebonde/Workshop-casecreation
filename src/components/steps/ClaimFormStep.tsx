@@ -571,12 +571,12 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
       {/* Existing claim form found */}
       {hasSearched && claimForm && claimForm.exists && (
         <>
-          <div className=" border border-green-200 rounded-lg p-4 mb-6">
+          <div className=" border border-green-500 rounded-lg p-4 mb-6">
             <div className="flex items-start">
-              <Check className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
+              <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5" />
               <div className="flex-1">
                 <h3 className="font-medium text-green-800 mb-2">Existing Claim Form Found</h3>
-                <p className="text-sm text-green-700 mb-4">
+                <p className="text-sm text-green-800 mb-4">
                   Great! A claim form for this vehicle was automatically located and loaded from our database.
                 </p>
                 <div className="bg-white rounded-lg p-3 border border-green-200">
@@ -618,12 +618,12 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
       {/* No existing claim form - show input method selection */}
       {hasSearched && !claimForm && !inputMethod && (
         <div className="space-y-6">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className=" border border-yellow-500 rounded-lg p-4">
             <div className="flex items-start">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-yellow-500 mr-3 mt-0.5" />
               <div>
-                <h3 className="font-medium text-yellow-800 mb-1">No Existing Claim Form Found</h3>
-                <p className="text-sm text-yellow-700">
+                <h3 className="font-medium text-yellow-500 mb-1">No Existing Claim Form Found</h3>
+                <p className="text-sm text-yellow-500">
                   No claim form exists for VRN {vrn}. Please choose how you would like to provide the claim information.
                 </p>
               </div>
@@ -677,7 +677,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
           <div className="flex items-center">
             <button
               onClick={() => setInputMethod(null)}
-              className="text-blue-600 hover:text-blue-800 text-sm mr-4"
+              className="mr-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               ← Back to options
             </button>
@@ -719,13 +719,13 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
 
           {uploadedFile && (
             <div className="space-y-4">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className=" border border-green-500 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <FileText className="w-5 h-5 text-green-600 mr-2" />
+                    <FileText className="w-5 h-5 text-green-800 mr-2" />
                     <div>
-                      <p className="text-sm font-medium text-green-800">{uploadedFile.name}</p>
-                      <p className="text-xs text-green-600">
+                      <p className="text font-medium text-green-800">{uploadedFile.name}</p>
+                      <p className="text-sm text-green-800">
                         {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
@@ -734,7 +734,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                     onClick={() => setUploadedFile(null)}
                     className="text-red-500 hover:text-red-700 transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-6 h-6" />
                   </button>
                 </div>
               </div>
@@ -754,12 +754,12 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
               )}
 
               {documentProcessed === true && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className=" border border-green-500 rounded-lg p-4">
                   <div className="flex items-start">
                     <Check className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
                     <div>
                       <h3 className="font-medium text-green-800">Upload Success</h3>
-                      <p className="text-sm text-green-700">
+                      <p className="text-sm text-green-800">
                         Document uploaded successfully. Please verify and complete any missing information below.
                       </p>
                     </div>
@@ -768,7 +768,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
               )}
 
               {documentProcessed === false && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className=" border border-red-500 rounded-lg p-4">
                   <div className="flex items-start">
                     <X className="w-5 h-5 text-red-600 mr-3 mt-0.5" />
                     <div>
@@ -779,13 +779,13 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                       <div className="flex space-x-3">
                         <button
                           onClick={handleTryUploadAgain}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-900 transition-colors"
                         >
                           Try Upload Again
                         </button>
                         <button
                           onClick={handleTryUploadAgain}
-                          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
                           Change File
                         </button>
@@ -814,7 +814,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
           <div className="flex items-center">
             <button
               onClick={() => setInputMethod(null)}
-              className="text-blue-600 hover:text-blue-800 text-sm mr-4"
+              className="mr-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               ← Back to options
             </button>
@@ -843,7 +843,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                     onChange={(e) => setSmsPhoneNumber(e.target.value)}
                     placeholder="e.g., +44 20 7946 0958"
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      formErrors.phoneNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                      formErrors.phoneNumber ? 'border-red-300 bg-red-50' : 'border-gray-400'
                     }`}
                     disabled={isSendingSms}
                   />
@@ -857,7 +857,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     SMS Message
                   </label>
-                  <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 min-h-[100px] flex items-center">
+                  <div className="w-full px-3 py-2 border border-gray-400 rounded-lg bg-white text-gray-700 min-h-[100px] flex items-center">
                     <p className="text-sm">
                       {SMS_MESSAGE_TEXT}
                       <a 
@@ -870,7 +870,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                       </a>
                     </p>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-700 mt-1">
                     This is a standard message that will be sent to the customer.
                   </p>
                 </div>
@@ -898,18 +898,18 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
               </div>
             </div>
           ) : (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className=" border border-green-500 rounded-lg p-4">
               <div className="flex items-start">
-                <Send className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
+                <Send className="w-5 h-5 text-green-800 mr-3 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-green-800 mb-2">SMS Successfully Sent</h4>
-                  <p className="text-sm text-green-700 mb-4">
+                  <p className="text-sm text-green-800 mb-4">
                     An SMS has been sent to the customer with a link to create their claim form on our platform.
                   </p>
                   
                   {/* SMS Details */}
-                  <div className="bg-white rounded-lg p-3 border border-green-200 mb-4">
-                    <div className="text-sm text-green-700 space-y-2">
+                  <div className="bg-white rounded-lg p-3 border border-green-300 mb-4">
+                    <div className="text-sm space-y-2">
                       <div>
                         <span className="font-medium">Phone:</span> {smsPhoneNumber}
                       </div>
@@ -927,7 +927,7 @@ const ClaimFormStep: React.FC<ClaimFormStepProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-lg p-3 border border-green-200">
+                  <div className="bg-white rounded-lg p-3 border border-green-300">
                     <h5 className="font-medium text-green-800 mb-2">What happens next:</h5>
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• Customer receives SMS with secure link</li>

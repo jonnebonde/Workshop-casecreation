@@ -769,7 +769,7 @@ const VRNLookupStep: React.FC<VRNLookupStepProps> = ({
                 <div className="flex space-x-3">
                   <button
                     onClick={handleContinueExisting}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                    className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
                     Continue Existing Case
                   </button>
