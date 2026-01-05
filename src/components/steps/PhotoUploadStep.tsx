@@ -56,20 +56,20 @@ const ImageExampleModal: React.FC<ImageExampleModalProps> = ({
               <h3 className="text-xl font-semibold text-gray-900">
                 {currentExample.title} - Example
               </h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-700 mt-1">
                 {currentIndex + 1} of {totalExamples}
               </p>
             </div>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-white"
+              className="text-gray-700 hover:text-gray-900 transition-colors p-1 rounded-full hover:bg-white"
             >
-              <X className="h-6 w-6" />
+              <X className="h-8 w-8" />
             </button>
           </div>
 
           <div className="px-6 py-6">
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-700 mb-4">
               {currentExample.description}
             </p>
 
@@ -170,9 +170,9 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
   // Example images for each required photo type
   const placeholderImages = {
-    overview: '',
-    glass_closeup: '',
-    damage_closeup: ''
+       overview: 'https://i.imgur.com/DxEqaxl.jpg',
+    glass_closeup: 'https://i.imgur.com/7V69aYo.jpg',
+    damage_closeup: 'https://i.imgur.com/6aHVpSH.jpg'
   };
 
   const imageExamples: ImageExample[] = [
@@ -914,16 +914,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       onDrop={(e) => handleDrop(e, photoType.type)}
                     >
                      {/* Example Image */}
-                     {placeholderImages[photoType.type as keyof typeof placeholderImages] && (
-                       <div className="mb-4">
-                       
-                         <img
-                           src={placeholderImages[photoType.type as keyof typeof placeholderImages]}
-                           alt={`Example ${photoType.title}`}
-                           className="w-full h-32 object-cover rounded border border-gray-200 mb-3"
-                         />
-                       </div>
-                     )}
+                     
                      
                       <div className="text-center">
                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
