@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Upload, Check, X, AlertTriangle, Eye, Calculator, ArrowLeft, RotateCcw, Info, HelpCircle, Settings, Edit } from 'lucide-react';
+import { FileText, Upload, Check, X, AlertTriangle, Eye, Calculator, ArrowLeft, RotateCcw, Trash2, Info, HelpCircle, Settings, Edit } from 'lucide-react';
 import { RepairItem, InvoiceOcrData } from '../../types/case';
 
 interface InvoiceStepProps {
@@ -367,7 +367,7 @@ const InvoiceStep: React.FC<InvoiceStepProps> = ({
                     className="text-red-500 hover:text-red-700 transition-colors"
                     title="Remove invoice"
                   >
-                    <X className="w-5 h-5" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
                 
