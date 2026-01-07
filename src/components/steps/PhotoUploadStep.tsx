@@ -277,8 +277,8 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
         setSkipPhotos(false);
         setSkipReason('');
         setUploadErrors({
-          'overview': 'File size too large (12.5MB). Maximum size is 10MB.',
-          'glass_closeup': 'Invalid file format. Please upload JPG, PNG, or WebP files only.',
+          'overview': 'Upload failed for this photo. Please try again.',
+          'glass_closeup': 'Upload failed for this photo. Please try again.',
           'damage_closeup': 'Upload failed for this photo. Please try again.'
         });
         onPhotosUploaded([], false, false, '');
@@ -738,35 +738,6 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                   </p>
                 </div>
 
-                {/* Error Display */}
-                {hasError && (
-                  <div className="b border border-red-500 rounded-lg p-3 mb-4">
-                    <div className="flex items-start">
-                      <X className="w-5 h-5 text-red-600 mr-2 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-sm text-red-700 mb-3">{hasError}</p>
-                        <div className="flex space-x-8">
-                          <button
-                            onClick={() => clearUploadError(photoType.type)}
-                            className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
-                          >
-                            Try Again
-                          </button>
-                          <button
-                            onClick={() => {
-                              clearUploadError(photoType.type);
-                              triggerFileInput(photoType.type);
-                            }}
-                            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                          >
-                            Choose Another File
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Multi-file handling for extra documentation */}
                 {isMultiFile ? (
                   <div className="space-y-4">
@@ -950,6 +921,35 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       </div>
                     </div>
                   )
+                )}
+
+                {/* Error Display */}
+                {hasError && (
+                  <div className="border border-red-500 rounded-lg p-3 mt-4">
+                    <div className="flex items-start">
+                      <X className="w-5 h-5 text-red-600 mr-2 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm text-red-700 mb-3">{hasError}</p>
+                        <div className="flex space-x-8">
+                          <button
+                            onClick={() => clearUploadError(photoType.type)}
+                            className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                          >
+                            Try Again
+                          </button>
+                          <button
+                            onClick={() => {
+                              clearUploadError(photoType.type);
+                              triggerFileInput(photoType.type);
+                            }}
+                            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                          >
+                            Choose Another File
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             );
