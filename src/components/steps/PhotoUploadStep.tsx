@@ -303,12 +303,40 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     }
   };
 
-  const validateFile = (file: File): string | null => {
+  const isImageFile = (file: File) => file.type.startsWith('image/');
+
+  const getAllowedTypes = (photoType: PhotoType) => {
+    if (photoType === 'extra_documentation') {
+      return {
+        mimeTypes: [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+          'application/pdf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'application/vnd.ms-excel',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'text/csv',
+          'text/plain'
+        ],
+        label: 'JPG, PNG, WebP, PDF, DOC, DOCX, XLS, XLSX, CSV, or TXT files'
+      };
+    }
+
+    return {
+      mimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+      label: 'JPG, PNG, or WebP images'
+    };
+  };
+
+  const validateFile = (file: File, photoType: PhotoType): string | null => {
     const maxSize = 10 * 1024 * 1024; // 10MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const { mimeTypes, label } = getAllowedTypes(photoType);
     
-    if (!allowedTypes.includes(file.type)) {
-      return `Invalid file format for ${file.name}. Please upload JPG, PNG, or WebP files only.`;
+    if (!mimeTypes.includes(file.type)) {
+      return `Invalid file format for ${file.name}. Please upload ${label} only.`;
     }
     
     if (file.size > maxSize) {
@@ -326,7 +354,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       return;
     }
 
-    const error = validateFile(file);
+    const error = validateFile(file, photoType);
     if (error) {
       setUploadErrors(prev => ({ ...prev, [photoType]: error }));
       return;
@@ -339,15 +367,14 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
       return newErrors;
     });
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
+    const applyPhotoUpdate = (preview: string) => {
       const newPhoto: Photo = {
         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
         type: photoType,
         file,
-        preview: e.target?.result as string
+        preview
       };
-      
+
       setPhotos(prev => {
         // Remove any existing photo of this type and add the new one
         const filtered = prev.filter(photo => photo.type !== photoType);
@@ -356,7 +383,16 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
         return updated;
       });
     };
-    reader.readAsDataURL(file);
+
+    if (isImageFile(file)) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        applyPhotoUpdate(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      applyPhotoUpdate('');
+    }
   };
 
   const handleMultipleFileUpload = (files: FileList, photoType: PhotoType) => {
@@ -372,7 +408,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
 
     // Validate all files first
     Array.from(files).forEach(file => {
-      const error = validateFile(file);
+      const error = validateFile(file, photoType);
       if (error) {
         errors.push(error);
       } else {
@@ -398,15 +434,14 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     const newPhotos: Photo[] = [];
 
     validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
+      const pushPhoto = (preview: string) => {
         const newPhoto: Photo = {
           id: Date.now().toString() + Math.random().toString(36).substr(2, 9) + processedCount,
           type: photoType,
           file,
-          preview: e.target?.result as string
+          preview
         };
-        
+
         newPhotos.push(newPhoto);
         processedCount++;
 
@@ -419,7 +454,16 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
           });
         }
       };
-      reader.readAsDataURL(file);
+
+      if (isImageFile(file)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          pushPhoto(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        pushPhoto('');
+      }
     });
   };
 
@@ -533,6 +577,13 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
+    if (!e.dataTransfer.files || e.dataTransfer.files.length === 0) return;
+
+    if (photoType === 'extra_documentation') {
+      handleMultipleFileUpload(e.dataTransfer.files, photoType);
+      return;
+    }
+
     const file = e.dataTransfer.files[0];
     if (file) {
       handleFileUpload(file, photoType);
@@ -747,18 +798,32 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         <h4 className="text-sm font-medium text-gray-700">
                           Uploaded files ({existingPhotos.length})
                         </h4>
-                        {existingPhotos.map((photo) => (
+                        {existingPhotos.map((photo) => {
+                          const isImage = isImageFile(photo.file);
+                          const fileExtension = photo.file.name.split('.').pop()?.toUpperCase();
+
+                          return (
                           <div key={photo.id} className="bg-green-50 border border-green-200 rounded-lg p-3">
                             <div className="flex items-start justify-between">
                               <div className="flex items-start space-x-3">
-                                <img
-                                  src={photo.preview}
-                                  alt={photo.file.name}
-                                  className="w-16 h-16 object-cover rounded border"
-                                />
+                                {isImage ? (
+                                  <img
+                                    src={photo.preview}
+                                    alt={photo.file.name}
+                                    className="w-16 h-16 object-cover rounded border"
+                                  />
+                                ) : (
+                                  <div className="w-16 h-16 rounded border bg-white flex flex-col items-center justify-center text-gray-500">
+                                    <Upload className="w-5 h-5" />
+                                    <span className="text-xs font-medium mt-1">{fileExtension || 'FILE'}</span>
+                                  </div>
+                                )}
                                 <div>
                                   <p className="text-sm font-medium text-green-800">
                                     {photo.file.name}
+                                  </p>
+                                  <p className="text-xs text-green-700">
+                                    {(photo.file.size / 1024 / 1024).toFixed(2)}MB
                                   </p>
                            
                                 </div>
@@ -772,7 +837,8 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                               </button>
                             </div>
                           </div>
-                        ))}
+                        );
+                        })}
                       </div>
                     )}
 
@@ -795,7 +861,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         
                         <input
                           type="file"
-                          accept="image/*"
+                          accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt"
                           multiple
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
@@ -856,7 +922,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       <div className="text-center">
                         <input
                           type="file"
-                          accept="image/*"
+                          accept=".jpg,.jpeg,.png,.webp"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
@@ -898,7 +964,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                         
                         <input
                           type="file"
-                          accept="image/*"
+                          accept=".jpg,.jpeg,.png,.webp"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
