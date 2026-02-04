@@ -745,7 +745,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                     {hasPhotos && (
                       <div className="space-y-3">
                         <h4 className="text-sm font-medium text-gray-700">
-                          Uploaded Photos ({existingPhotos.length})
+                          Uploaded files ({existingPhotos.length})
                         </h4>
                         {existingPhotos.map((photo) => (
                           <div key={photo.id} className="bg-green-50 border border-green-200 rounded-lg p-3">
@@ -787,7 +787,7 @@ const PhotoUploadStep: React.FC<PhotoUploadStepProps> = ({
                       <div className="text-center">
                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                         <h4 className=" text-lg font-medium text-gray-900 mb-2">
-                          {hasPhotos ? 'Upload Additional Photos' : `Upload ${photoType.title}`}
+                          {hasPhotos ? 'Upload Additional Files' : `Upload ${photoType.title}`}
                         </h4>
                         <p className="text-sm text-gray-500 mb-3">
                           Drag and drop your files here, or click to select
