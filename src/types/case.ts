@@ -104,6 +104,17 @@ export interface PriceAgreementResult {
   details?: string[];
 }
 
+export interface CalibrationData {
+  pidRequiresCalibration: boolean;
+  arRequiresCalibration: boolean;
+  workshopRequiresCalibration: boolean;
+  workshopDisagrees: boolean;
+  comment: string;
+  signature: string;
+  confirmed: boolean;
+  document: File | null;
+}
+
 export interface CaseData {
   vrn: string;
   damageDate: string;
@@ -126,9 +137,7 @@ export interface CaseData {
   vrnConfirmed: boolean;
   partsLaborConfirmed: boolean;
   customerAcceptedNoCoverage: boolean;
-  calibrationNeeded: boolean;
-  calibrationSignature: string;
-  calibrationDocument: File | null;
+  calibration: CalibrationData;
   photosSkipped: boolean;
   photosSkippedReason: string;
   jobPerformedDate: string;

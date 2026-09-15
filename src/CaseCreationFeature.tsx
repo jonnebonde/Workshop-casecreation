@@ -10,6 +10,7 @@ import InvoiceStep from './components/steps/InvoiceStep';
 import { useCaseData } from './hooks/useCaseData';
 import { Step, StepStatus } from './types/case';
 import { determineCaseApprovalStatus } from './utils/preCheckLogic';
+import { isCalibrationComplete } from './utils/calibration';
 
 interface CaseCreationFeatureProps {
   onCaseSubmitted?: (caseData: any) => void;
@@ -86,8 +87,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
       case 1:
         return caseData.claimFormActionTaken === 'continued' ? 'complete' : 'incomplete';
       case 2:
-        const isCalibrationComplete = !caseData.calibrationNeeded || (caseData.calibrationNeeded && caseData.calibrationSignature);
-        return caseData.repairItems.length > 0 && isCalibrationComplete ? 'complete' : 'incomplete';
+        return caseData.repairItems.length > 0 && isCalibrationComplete(caseData.calibration) ? 'complete' : 'incomplete';
       case 3:
         if (caseData.skippedItems.includes('photos')) return 'pending';
         return caseData.photosComplete ? 'complete' : 'complete';
@@ -113,8 +113,7 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
       case 1:
         return caseData.claimFormActionTaken === 'continued';
       case 2:
-        const isCalibrationComplete = !caseData.calibrationNeeded || (caseData.calibrationNeeded && caseData.calibrationSignature);
-        return !!((caseData.repairItems.length > 0 && isCalibrationComplete) || caseData.skippedItems.includes('parts-labor'));
+        return !!((caseData.repairItems.length > 0 && isCalibrationComplete(caseData.calibration)) || caseData.skippedItems.includes('parts-labor'));
       case 3:
         return true;
       case 4:
@@ -258,19 +257,9 @@ const CaseCreationFeature: React.FC<CaseCreationFeatureProps> = ({
             glassType={caseData.claimForm?.glassType || 'Windscreen'}
             customerDeductible={250}
             onRepairItemsUpdated={updateRepairItems}
-            onCalibrationNeededUpdated={(calibrationNeeded) => 
-              updateCalibrationData(calibrationNeeded, caseData.calibrationSignature ?? '', caseData.calibrationDocument ?? null)
-            }
-            onCalibrationSignatureUpdated={(calibrationSignature) => 
-              updateCalibrationData(caseData.calibrationNeeded ?? false, calibrationSignature, caseData.calibrationDocument ?? null)
-            }
-            onCalibrationDocumentUpdated={(calibrationDocument) => 
-              updateCalibrationData(caseData.calibrationNeeded ?? false, caseData.calibrationSignature ?? '', calibrationDocument)
-            }
+            initialCalibration={caseData.calibration}
+            onCalibrationUpdated={updateCalibrationData}
             initialRepairItems={caseData.repairItems}
-            initialCalibrationNeeded={caseData.calibrationNeeded ?? false}
-            initialCalibrationSignature={caseData.calibrationSignature ?? ''}
-            initialCalibrationDocument={caseData.calibrationDocument ?? null}
             initialJobPerformedDate={caseData.jobPerformedDate || ''}
             onJobPerformedDateUpdated={updateJobPerformedDate}
           />
