@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, 
   Trash2, 
-  Check, 
-  Settings, 
-  AlertTriangle, 
-  PenTool, 
-  FileText, 
-  Upload, 
-  X, 
-  Shield 
+  AlertTriangle
 } from 'lucide-react';
-import { RepairItem, RepairCategory, PriceAgreementResult } from '../../types/case';
+import { CalibrationData, RepairItem, RepairCategory } from '../../types/case';
+import { isCalibrationComplete } from '../../utils/calibration';
+import CalibrationSection from '../CalibrationSection';
 
 // Suggested repair items based on glass type
 const getSuggestedRepairItems = (glassType: string): RepairItem[] => {
@@ -199,12 +194,8 @@ interface PartsLaborStepProps {
   customerDeductible: number;
   initialRepairItems: RepairItem[];
   onRepairItemsUpdated: (items: RepairItem[]) => void;
-  initialCalibrationNeeded: boolean;
-  onCalibrationNeededUpdated: (needed: boolean) => void;
-  initialCalibrationSignature: string;
-  onCalibrationSignatureUpdated: (signature: string) => void;
-  initialCalibrationDocument: File | null;
-  onCalibrationDocumentUpdated: (document: File | null) => void;
+  initialCalibration: CalibrationData;
+  onCalibrationUpdated: (updates: Partial<CalibrationData>) => void;
   initialJobPerformedDate: string;
   onJobPerformedDateUpdated: (date: string) => void;
 }
@@ -214,27 +205,16 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
   customerDeductible = 250,
   initialRepairItems,
   onRepairItemsUpdated,
-  initialCalibrationNeeded,
-  onCalibrationNeededUpdated,
-  initialCalibrationSignature,
-  onCalibrationSignatureUpdated,
-  initialCalibrationDocument,
-  onCalibrationDocumentUpdated,
+  initialCalibration,
+  onCalibrationUpdated,
   initialJobPerformedDate,
   onJobPerformedDateUpdated,
 }) => {
   
   // Internal state management
   const [repairItems, setRepairItems] = useState<RepairItem[]>(initialRepairItems || []);
-  const [calibrationNeeded, setCalibrationNeeded] = useState<boolean>(initialCalibrationNeeded);
-  const [calibrationSignature, setCalibrationSignature] = useState<string>(initialCalibrationSignature || '');
-  const [calibrationDocument, setCalibrationDocument] = useState<File | null>(initialCalibrationDocument);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [jobPerformedDate, setJobPerformedDate] = useState<string>(initialJobPerformedDate || '');
-  
-  const [calibrationFileError, setCalibrationFileError] = useState<string>('');
-  const [isDeveloperMode, setIsDeveloperMode] = useState<boolean>(false);
-  const [activeScenario, setActiveScenario] = useState<string>('');
 
   // VAT rate (25%)
   const VAT_RATE = 0.25;
@@ -334,57 +314,6 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
     onRepairItemsUpdated(updatedItems);
   };
 
-  const handleCalibrationNeededChange = (needed: boolean) => {
-    setCalibrationNeeded(needed);
-    onCalibrationNeededUpdated(needed);
-  };
-
-  const handleCalibrationSignatureChange = (signature: string) => {
-    setCalibrationSignature(signature);
-    onCalibrationSignatureUpdated(signature);
-  };
-
-  const handleCalibrationDocumentChange = (document: File | null) => {
-    setCalibrationDocument(document);
-    onCalibrationDocumentUpdated(document);
-  };
-
-  const toggleDeveloperMode = () => {
-    setIsDeveloperMode(!isDeveloperMode);
-    if (isDeveloperMode) {
-      // Reset states when exiting developer mode
-      setActiveScenario('');
-      setCalibrationDocument(null);
-      setCalibrationFileError('');
-      handleCalibrationDocumentChange(null);
-    }
-  };
-
-  const setScenario = (scenario: string) => {
-    setActiveScenario(scenario);
-    
-    switch (scenario) {
-      case 'uploadSuccess':
-        const mockFile = new File(['mock content'], 'calibration-cert.pdf', { type: 'application/pdf' });
-        setCalibrationDocument(mockFile);
-        setCalibrationFileError('');
-        handleCalibrationDocumentChange(mockFile);
-        break;
-      case 'uploadFailed':
-        setCalibrationDocument(null);
-        setCalibrationFileError('Failed uploading your document, please try again.');
-        handleCalibrationDocumentChange(null);
-        break;
-      case 'noDocument':
-        setCalibrationDocument(null);
-        setCalibrationFileError('');
-        handleCalibrationDocumentChange(null);
-        break;
-      default:
-        break;
-    }
-  };
-
   const validateRepairItems = (): string[] => {
     const errors: string[] = [];
     
@@ -404,53 +333,9 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
     return errors;
   };
 
-  const isCalibrationSectionComplete = (): boolean => {
-    if (!calibrationNeeded) return true;
-    return calibrationSignature.trim() !== '';
-  };
-
-  const handleCalibrationDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Skip processing if in developer mode with active scenario
-    if (isDeveloperMode && activeScenario) {
-      return;
-    }
-
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-
-    let error: string | null = null;
-    if (file.size > maxSize) {
-      error = 'File size must be less than 10MB';
-    } else if (!allowedTypes.includes(file.type)) {
-      error = 'File must be PDF, JPG, or PNG format';
-    }
-
-    if (error) {
-      setCalibrationFileError(error);
-      handleCalibrationDocumentChange(null);
-      return;
-    }
-
-    setCalibrationFileError('');
-    handleCalibrationDocumentChange(file);
-  };
-
-  const removeCalibrationDocument = () => {
-    handleCalibrationDocumentChange(null);
-    setCalibrationFileError('');
-  };
-
-  const handleClearCalibrationError = () => {
-    setCalibrationFileError('');
-    handleCalibrationDocumentChange(null);
-  };
-
   const isDataValid = (): boolean => {
     const repairItemErrors = validateRepairItems();
-    const calibrationComplete = isCalibrationSectionComplete();
+    const calibrationComplete = isCalibrationComplete(initialCalibration);
     
     return repairItemErrors.length === 0 && calibrationComplete;
   };
@@ -669,238 +554,8 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
           )}
         </div>
 
-        {/* Calibration Information Section */}
-        <div className="border-t pt-6">
-          <div className="flex items-center mb-4">
-          
-            <div>
-              <h3 className="text-lg font-medium text-gray-900"> Calibration Information</h3>
-              <p className="text-sm text-gray-600">Specify if this repair requires calibration work</p>
-            </div>
-            <button
-              onClick={toggleDeveloperMode}
-              className={`ml-auto px-3 py-1 text-sm rounded-lg border transition-colors ${
-                isDeveloperMode 
-                  ? 'bg-orange-100 text-orange-800 border-orange-300' 
-                  : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'
-              }`}
-            >
-              <Settings className="w-4 h-4 inline mr-1" />
-              Developer Mode
-            </button>
-          </div>
+        <CalibrationSection calibration={initialCalibration} onChange={onCalibrationUpdated} />
 
-          {/* Developer Tool */}
-          {isDeveloperMode && (
-            <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
-              <div className="flex items-center mb-3">
-                <Settings className="w-4 h-4 text-orange-600 mr-2" />
-                <h3 className="font-medium text-orange-800">Developer Testing Tool</h3>
-              </div>
-              <p className="text-sm text-orange-700 mb-4">
-                Select a scenario to instantly test different calibration document upload outcomes:
-              </p>
-              
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setScenario('uploadSuccess')}
-                  className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                    activeScenario === 'uploadSuccess'
-                      ? 'bg-green-100 text-green-800 border-green-300'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  Upload Success
-                </button>
-                <button
-                  onClick={() => setScenario('uploadFailed')}
-                  className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                    activeScenario === 'uploadFailed'
-                      ? 'bg-red-100 text-red-800 border-red-300'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  Upload Failed
-                </button>
-                <button
-                  onClick={() => setScenario('noDocument')}
-                  className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                    activeScenario === 'noDocument'
-                      ? 'bg-gray-100 text-gray-800 border-gray-300'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  No Document
-                </button>
-              </div>
-              
-              {activeScenario && (
-                <div className="mt-3 p-3 bg-white rounded border border-orange-200">
-                  <p className="text-sm text-orange-700">
-                    <strong>Active Scenario:</strong> {
-                      activeScenario === 'uploadSuccess' ? 'Upload Success - Shows successful document upload with file details' :
-                      activeScenario === 'uploadFailed' ? 'Upload Failed - Shows file validation error with retry options' :
-                      activeScenario === 'noDocument' ? 'No Document - Shows initial upload state' :
-                      'Unknown scenario'
-                    }
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="space-y-4">
-            {/* Calibration Required Toggle */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <div className="flex items-start">
-            
-                <div className="ml-3">
-                  <label htmlFor="calibration-needed" className="text-sm font-medium text-gray-800">
-             
-                    Does this repair require calibration?
-                  </label>
-                      <input
-                  type="checkbox"
-                  id="calibration-needed"
-                  checked={calibrationNeeded}
-                  onChange={(e) => handleCalibrationNeededChange(e.target.checked)}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded ml-3 "
-                />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Check this if the glass replacement affects ADAS systems, cameras, or sensors
-                  </p>
-                </div>
-              </div>
-              
-              {!calibrationNeeded && (
-                <div className="mt-3 ml-7 flex items-center text-green-800 text-m">
-                  <Check className="w-4 h-4 mr-1" />
-                  No calibration required - section complete
-                </div>
-              )}
-            </div>
-
-            {/* Calibration Details - Only show when calibration is needed */}
-            {calibrationNeeded && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 space-y-4">
-                <div className="flex items-center text-purple-800 mb-3">
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  <span className="font-medium"> Calibration Required - Please Complete</span>
-                </div>
-
-                {/* Signature Field */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <PenTool className="w-4 h-4 inline mr-1" />
-                    Technician Signature <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={calibrationSignature}
-                    onChange={(e) => handleCalibrationSignatureChange(e.target.value)}
-                    placeholder="Enter technician name/signature"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                      calibrationSignature.trim() ? 'border-green-300 bg-green-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {calibrationSignature.trim() ? (
-                    <div className="mt-1 flex items-center text-green-600 text-sm">
-                    
-                    </div>
-                  ) : (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Required: Name or signature of technician performing calibration
-                    </p>
-                  )}
-                </div>
-
-                {/* Document Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <FileText className="w-4 h-4 inline mr-1" />
-                    Calibration Document (Optional)
-                  </label>
-                  
-                  {calibrationDocument ? (
-                    <div className="bg-white border border-gray-300 rounded-lg p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <FileText className="w-5 h-5 text-gray-400 mr-2" />
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">
-                               {calibrationDocument.name}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {(calibrationDocument.size / 1024 / 1024).toFixed(2)} MB
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          onClick={removeCalibrationDocument}
-                          className="text-red-500 hover:text-red-700 transition-colors"
-                          title="Remove document"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                      <div className="text-center">
-                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                        <div className="text-sm text-gray-600 mb-2">
-                          Upload calibration certificate or documentation
-                        </div>
-                        <div className="text-xs text-gray-400 mb-3">
-                          PDF, JPG, PNG (max 10MB)
-                        </div>
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={handleCalibrationDocumentUpload}
-                          className="hidden"
-                          id="calibration-document-upload"
-                        />
-                        <label
-                          htmlFor="calibration-document-upload"
-                          className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 cursor-pointer transition-colors"
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Choose File
-                        </label>
-                      </div>
-                    </div>
-                  )}
-
-                  {calibrationFileError && (
-                    <div className="mt-2 bg-white border border-red-500 rounded-lg p-3">
-                      <div className="flex items-center justify-between">
-                        <X className="w-6 h-6 text-red-600 mr-2" />
-                        <p className="text-sm text-red-700">{calibrationFileError}</p>
-                        <button
-                          onClick={handleClearCalibrationError}
-                          className="ml-3 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-900 transition-colors"
-                        >
-                          Try Again
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Completion Status */}
-                {isCalibrationSectionComplete() && (
-                  <div className="bg-white border border-green-500 rounded-lg p-3">
-                    <div className="flex items-center text-green-800">
-                      <Check className="w-4 h-4 mr-2" />
-                      <span className="text-sm font-medium"> Calibration section complete</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Job Performed Date Section */}
         <div className="mt-6">
@@ -941,8 +596,8 @@ const PartsLaborStep: React.FC<PartsLaborStepProps> = ({
                 {validateRepairItems().map((issue, index) => (
                   <li key={index}>{issue}</li>
                 ))}
-                {calibrationNeeded && !calibrationSignature.trim() && (
-                  <li>Calibration signature is required when calibration is needed</li>
+                {!isCalibrationComplete(initialCalibration) && (
+                  <li>Complete the required calibration information or save the case as a draft</li>
                 )}
               </ul>
             </div>

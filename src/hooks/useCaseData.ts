@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CaseData, Vehicle, Owner, ExistingCase, ClaimForm, CoverageCheck, PriceEstimate, Photo, RepairItem, InvoiceOcrData, AdditionalClaimInfo } from '../types/case';
+import { CaseData, Vehicle, Owner, ExistingCase, ClaimForm, CoverageCheck, PriceEstimate, Photo, RepairItem, InvoiceOcrData, AdditionalClaimInfo, CalibrationData } from '../types/case';
 
 export const useCaseData = () => {
   const [caseData, setCaseData] = useState<CaseData>({
@@ -24,9 +24,16 @@ export const useCaseData = () => {
     vrnConfirmed: false,
     partsLaborConfirmed: false,
     customerAcceptedNoCoverage: false,
-    calibrationNeeded: false,
-    calibrationSignature: '',
-    calibrationDocument: null,
+    calibration: {
+      pidRequiresCalibration: false,
+      arRequiresCalibration: false,
+      workshopRequiresCalibration: false,
+      workshopDisagrees: false,
+      comment: '',
+      signature: '',
+      confirmed: false,
+      document: null
+    },
     photosSkipped: false,
     photosSkippedReason: '',
     jobPerformedDate: '',
@@ -99,12 +106,13 @@ export const useCaseData = () => {
     }));
   };
 
-  const updateCalibrationData = (calibrationNeeded: boolean, calibrationSignature?: string, calibrationDocument?: File | null) => {
+  const updateCalibrationData = (updates: Partial<CalibrationData>) => {
     setCaseData(prev => ({
       ...prev,
-      calibrationNeeded,
-      calibrationSignature: calibrationSignature ?? prev.calibrationSignature,
-      calibrationDocument: calibrationDocument ?? prev.calibrationDocument
+      calibration: {
+        ...prev.calibration,
+        ...updates
+      }
     }));
   };
 
@@ -176,9 +184,16 @@ export const useCaseData = () => {
       skippedItems: [],
       partsLaborConfirmed: false,
       customerAcceptedNoCoverage: false,
-      calibrationNeeded: false,
-      calibrationSignature: '',
-      calibrationDocument: null,
+      calibration: {
+        pidRequiresCalibration: false,
+        arRequiresCalibration: false,
+        workshopRequiresCalibration: false,
+        workshopDisagrees: false,
+        comment: '',
+        signature: '',
+        confirmed: false,
+        document: null
+      },
       photosSkipped: false,
       photosSkippedReason: '',
       jobPerformedDate: '',
